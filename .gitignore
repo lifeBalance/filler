@@ -1,0 +1,9 @@
+# Ignore everything (files and folders)
+/**
+
+# Whitelist:
+!.gitignore
+!author
+!*.c
+!*.h
+!Makefile
