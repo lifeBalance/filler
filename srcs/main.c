@@ -6,80 +6,74 @@
 /*   By: rodrodri <rodrodri@student.hive.fi >       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/02/03 16:22:48 by rodrodri          #+#    #+#             */
-/*   Updated: 2022/02/04 13:05:36 by rodrodri         ###   ########.fr       */
+/*   Updated: 2022/02/06 16:53:51 by rodrodri         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "libft.h"
 #include "filler.h"
-#include <stdio.h>
 
-static void	get_playa(int *playa);
-static void	get_size(int *rows, int *cols);
-static int	parse_digits(char **line);
+void	get_playa(t_filler *f);
+void	get_board_size(t_filler *f);
+void	parse_board(t_filler *f);
 
 int	main(void)
 {
-	int		playa;
-	int		rows;
-	int		cols;
-	// char	*board;
+	t_filler	f;
 
 	// ft_printf("Buf: %d\n", BUFF_SIZE);
-	get_playa(&playa);
-	ft_printf("you're playa #%d!\n", playa);
-	get_size(&rows, & cols);
-	ft_printf("rows: %d, cols: %d\n", rows, cols);
-	ft_printf("0 0");
+	get_playa(&f);
+	ft_printf("you're playa #%d!\n", f.playa);
+	init_board(&f);
+	ft_printf("rows: %d, cols: %d\n", f.rows, f.cols);
+	print_matrix(f.board, f.rows, f.cols); // just for now
+	handle_token(&f);
+	// while (1)
+	// {
+	// 	handle_token(&f);
+	// 	// Place the token (print its coordinates on the board)
+	// 	print_matrix(f.token, f.token_rows, f.token_cols); // just for now
+	// 	ft_strdel(&f.token); // just for now
+	// 	parse_board(&f);
+	// 	print_matrix(f.board, f.rows, f.cols); // just for now
+	// }
 	system("leaks rodrodri.filler");
 	return (0);
 }
 
-static void	get_playa(int *playa)
+/*
+**	It fast-forwards to the line starting with '$$$ exec', and checks if it
+**	contains our player name. If so, we're player 1, otherwise we're player 2.
+**	(It could be refactor to also extract both player names and store them
+**	in dedicated fields of the t_filler structure; can be used for visualize).
+*/
+void	get_playa(t_filler *f)
 {
 	char	*line;
 
-	while (get_next_line(0, &line) > 0)
-	{
-		if (ft_strncmp(line, "$$$", 3) == 0)
-			break ;
-		ft_strdel(&line);
-	}
-	if (ft_strnequ(ft_strstr(line, AUTHOR), AUTHOR, ft_strlen(AUTHOR)))
-		*playa = 1;
+	line = find_line(PLAYA_LN);
+	if (!line)
+		exit(EXIT_FAILURE);
+	if (ft_strstr(line, AUTHOR))
+		f->playa = 1;
 	else
-		*playa = 2;
+		f->playa = 2;
 	ft_strdel(&line);
 }
 
-static void	get_size(int *rows, int *cols)
-{
-	char	*line;
-	char	*line_cpy;
+// int	get_last_move(void)
+// {
+// 	char	*line;
+// 	char	*line_cpy;
+// 	int		last_move;
 
-	while (get_next_line(0, &line) > 0)
-	{
-		if (ft_strncmp(line, "Plateau", ft_strlen("Plateau")) == 0)
-			break ;
-		ft_strdel(&line);
-	}
-	line_cpy = line;
-	*rows = parse_digits(&line);
-	*cols = parse_digits(&line);
-	ft_strdel(&line_cpy);
-}
-
-static int	parse_digits(char **line)
-{
-	int	n;
-
-	while (!ft_isdigit(**line))
-		(*line)++;
-	n = 0;
-	while (**line && ft_isdigit(**line))
-	{
-		n = n * 10 + (**line - '0');
-		(*line)++;
-	}
-	return (n);
-}
+// 	get_next_line(0, &line);
+// 	line_cpy = line;
+// 	line = ft_strchr(line, '(');
+// 	if (line[1] == 'O')
+// 		last_move = 1;
+// 	else
+// 		last_move = 2;
+// 	ft_strdel(&line_cpy);
+// 	return (last_move);
+// }
