@@ -6,37 +6,35 @@
 /*   By: rodrodri <rodrodri@student.hive.fi >       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/02/03 16:22:48 by rodrodri          #+#    #+#             */
-/*   Updated: 2022/02/06 16:53:51 by rodrodri         ###   ########.fr       */
+/*   Updated: 2022/02/06 22:36:09 by rodrodri         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "libft.h"
 #include "filler.h"
 
-void	get_playa(t_filler *f);
+void	init_filler(t_filler *f);
+void	get_our_playa(t_filler *f);
 void	get_board_size(t_filler *f);
-void	parse_board(t_filler *f);
+int		parse_board(t_filler *f);
 
 int	main(void)
 {
 	t_filler	f;
 
 	// ft_printf("Buf: %d\n", BUFF_SIZE);
-	get_playa(&f);
-	ft_printf("you're playa #%d!\n", f.playa);
+	ft_memset(&f, 0, sizeof(f));
+	get_our_playa(&f);
+	ft_printf("we're playa #%d!\n", f.we);
 	init_board(&f);
-	ft_printf("rows: %d, cols: %d\n", f.rows, f.cols);
-	print_matrix(f.board, f.rows, f.cols); // just for now
-	handle_token(&f);
-	// while (1)
-	// {
-	// 	handle_token(&f);
+	f.next = 1;
+	while (1)
+	{
+		handle_token(&f);
+		if (parse_board(&f) == 0)
+			break ;
 	// 	// Place the token (print its coordinates on the board)
-	// 	print_matrix(f.token, f.token_rows, f.token_cols); // just for now
-	// 	ft_strdel(&f.token); // just for now
-	// 	parse_board(&f);
-	// 	print_matrix(f.board, f.rows, f.cols); // just for now
-	// }
+	}
 	system("leaks rodrodri.filler");
 	return (0);
 }
@@ -47,7 +45,7 @@ int	main(void)
 **	(It could be refactor to also extract both player names and store them
 **	in dedicated fields of the t_filler structure; can be used for visualize).
 */
-void	get_playa(t_filler *f)
+void	get_our_playa(t_filler *f)
 {
 	char	*line;
 
@@ -55,9 +53,9 @@ void	get_playa(t_filler *f)
 	if (!line)
 		exit(EXIT_FAILURE);
 	if (ft_strstr(line, AUTHOR))
-		f->playa = 1;
+		f->we = 1;
 	else
-		f->playa = 2;
+		f->we = 2;
 	ft_strdel(&line);
 }
 

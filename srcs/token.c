@@ -6,7 +6,7 @@
 /*   By: rodrodri <rodrodri@student.hive.fi >       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/02/06 12:03:50 by rodrodri          #+#    #+#             */
-/*   Updated: 2022/02/06 17:06:00 by rodrodri         ###   ########.fr       */
+/*   Updated: 2022/02/06 22:34:47 by rodrodri         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,7 +15,7 @@
 
 static void	get_token_size(t_filler *f, char *line);
 static void	alloc_parse_token(t_filler *f);
-static char	*is_token(char **token_line);
+static char	*nextln_is_piece(char **token_line);
 
 /*
 **	It starts by getting the size of the token:
@@ -33,21 +33,24 @@ void	handle_token(t_filler *f)
 
 	get_token_size(f, find_line(PIECE_SIZE_LN));
 	ft_printf("token rows: %d, token cols: %d\n", f->token_rows, f->token_cols);
-	if (f->playa == f->last_move && !f->greedy)
+	if (f->we == f->next || f->greedy)
 	{
-		skip_lines(f->token_rows); // skip the lines of the other playa's token
-		// find a way to set last move...
-		if (check_play() == 0 && is_token(&line))
-		{
-			get_token_size(f, line);
-			ft_strdel(&line);
-			alloc_parse_token(f);
-			f->greedy = 1;
-		}
+		alloc_parse_token(f);
+		print_token(f);
 	}
 	else
-		alloc_parse_token(f);
-	print_matrix(f->token, f->token_rows, f->token_cols); // just for now
+	{
+		skip_lines(f->token_rows);
+		ft_printf("skipping other playa's token\n");
+		if (check_play(f) == 0 && nextln_is_piece(&line))
+		{
+			get_token_size(f, line);
+			alloc_parse_token(f);
+			f->greedy = 1;
+			print_token(f); //<-- delete me!!
+		}
+	}
+	toggle_next(f);
 }
 
 void	get_token_size(t_filler *f, char *line)
@@ -85,10 +88,10 @@ void	alloc_parse_token(t_filler *f)
 /*
 **	If next line is a token, returns the line, otherwise, returns NULL.
 */
-char	*is_token(char **token_line)
+char	*nextln_is_piece(char **token_line)
 {
 	get_next_line(0, token_line);
-	if (ft_strstr(*token_line, "[0, 0]"))
+	if (ft_strstr(*token_line, "Piece"))
 		return (*token_line);
 	else
 	{

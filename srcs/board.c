@@ -6,7 +6,7 @@
 /*   By: rodrodri <rodrodri@student.hive.fi >       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/02/06 12:03:50 by rodrodri          #+#    #+#             */
-/*   Updated: 2022/02/06 16:23:00 by rodrodri         ###   ########.fr       */
+/*   Updated: 2022/02/06 22:42:29 by rodrodri         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -43,6 +43,7 @@ static void	get_board_size(t_filler *f)
 	f->rows = parse_digits(&line);
 	f->cols = parse_digits(&line);
 	ft_strdel(&line_cpy);
+	ft_printf("rows: %d, cols: %d\n", f->rows, f->cols); // <=== delete me!!!!!
 }
 
 /*
@@ -52,13 +53,15 @@ static void	get_board_size(t_filler *f)
 **	contains the number of the row.
 **	It stops reading lines at the very last line of the board.
 */
-void	parse_board(t_filler *f)
+int	parse_board(t_filler *f)
 {
 	char	*line;
 	char	*line_cpy;
 	int		i;
 
 	line = find_line(FIRST_BOARD_LN);
+	if (!line)
+		return (0);
 	i = 0;
 	while (1)
 	{
@@ -72,4 +75,6 @@ void	parse_board(t_filler *f)
 		else
 			break ;
 	}
+	print_board(f); // <=== delete me!!!!!
+	return (1);
 }
