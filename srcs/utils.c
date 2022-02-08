@@ -6,66 +6,85 @@
 /*   By: rodrodri <rodrodri@student.hive.fi >       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/02/06 12:07:35 by rodrodri          #+#    #+#             */
-/*   Updated: 2022/02/06 22:44:17 by rodrodri         ###   ########.fr       */
+/*   Updated: 2022/02/08 17:19:12 by rodrodri         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "libft.h"
 #include "filler.h"
 
+int	get_size(char **ln, int *rows, int *cols)
+{
+	int		advance;
+
+	advance = parse_digits(*ln, rows);
+	parse_digits(*ln + advance, cols);
+	ft_strdel(ln);
+	return (1);
+}
+
 /*
 **	It parses its 'str' argument (the address of a string), searching for
 **	digits, which are stored in an 'int' variable returned at the end.
 */
-int	parse_digits(char **line)
+int	parse_digits(char *line, int *n)
 {
-	int	n;
+	int	i;
 
-	while (!ft_isdigit(**line))
-		(*line)++;
-	n = 0;
-	while (**line && ft_isdigit(**line))
+	i = 0;
+	while (!ft_isdigit(line[i]))
+		i++;
+	*n = 0;
+	while (line[i] && ft_isdigit(line[i]))
 	{
-		n = n * 10 + (**line - '0');
-		(*line)++;
+		*n = *n * 10 + (line[i] - '0');
+		i++;
 	}
-	return (n);
+	return (i);
 }
 
 /*
 **	It fast-forwards to the line which contains its 'str' argument.
-**	It returns that line if found, zero (NULL) otherwise.
+**	Return values:
+**		- If the line is found, 1.
+**		- If the line is NOT found, 0.
+**		- If the END LINE ("fin") found, -1.
 */
-char	*find_line(const char *str)
+int	find_line(char **ln, const char *str)
 {
 	int		ret;
-	char	*line;
 
-	ret = get_next_line(0, &line);
-	while (ret > 0 && !ft_strstr(line, str))
+	ret = get_next_line(STDIN_FILENO, ln);
+	while (ret > 0)
 	{
-		if (ft_strstr(line, "fin"))
-			break ;
-		ft_strdel(&line);
-		ret = get_next_line(0, &line);
+		if (ft_strstr(*ln, str))
+			return (1);
+		else if (ft_strstr(*ln, "fin"))
+		{
+			ft_strdel(ln);
+			return (-1);
+		}
+		else
+		{
+			ft_strdel(ln);
+			ret = get_next_line(STDIN_FILENO, ln);
+		}
 	}
-	if (ret <= 0 || ft_strstr(line, "fin"))
-	{
-		ft_strdel(&line);
-		return (0);
-	}
-	return (line);
+	return (0);
 }
 
-void	skip_lines(int n)
+/*
+**	It skips a given number of lines, freeing allocated lines along the way.
+*/
+int	skip_lines(t_filler *f, int n)
 {
-	char	*line;
-
 	while (n--)
 	{
-		get_next_line(0, &line);
-		ft_strdel(&line);
+		if (get_next_line(STDIN_FILENO, &f->line) <= 0)
+			return (-1);
+		ft_strdel(&f->line);
 	}
+	return (1);
 }
 
 /*
@@ -75,69 +94,81 @@ void	skip_lines(int n)
 **	Regardless of the player, it returns 0 if the last play was "[0, 0]",
 **	and 1 otherwise.
 */
-int		check_play(t_filler *f)
+int		check_play(char **ln)
 {
-	char	*line;
-	char	*line_cpy;
 	int		play;
 
-	get_next_line(0, &line);
-	line_cpy = line;
-	if (ft_strstr(line, "[0, 0]"))
+	get_next_line(STDIN_FILENO, ln);
+	if (ft_strstr(*ln, "[0, 0]"))
 		play = 0;
 	else
 		play = 1;
-	(void)f;
-	if (play == 0)
+	if (play == 0) // <=================================== delete me!!!!
 		ft_printf("other guy moved [0, 0]\n");
-	// line = ft_strchr(line, '(') + 1;
-	// if (*line == 'O')
-	// 	f->next = 1;
-	// else
-	// 	f->next = 2;
-	ft_strdel(&line_cpy);
+	ft_strdel(ln);
 	return (play);
 }
 
 /*
 **	It prints the token and releases it when done. It doesn't return anything.
 */
-void	print_token(t_filler *f)
+void	print_char2darr(char **str, int rows, int cols)
 {
 	int		i;
+	int		j;
 
 	i = 0;
-	while (f->token[i] && i < f->token_rows * f->token_cols)
+	while (i < rows)
 	{
-		ft_printf("%c", f->token[i]);
-		if (i % f->token_cols == f->token_cols - 1)
-			ft_putchar('\n');
-		i++;
-	}
-	ft_strdel(&f->token);
-}
-
-/*
-**	It prints the board. It doesn't return anything.
-*/
-void	print_board(t_filler *f)
-{
-	int		i;
-
-	i = 0;
-	while (f->board[i] && i < f->rows * f->cols)
-	{
-		ft_printf("%c", f->board[i]);
-		if (i % f->cols == f->cols - 1)
-			ft_putchar('\n');
+		j = 0;
+		while (j < cols)
+			ft_printf("%c", str[i][j++]);
+		ft_putchar('\n');
 		i++;
 	}
 }
 
 void	toggle_next(t_filler *f)
 {
-	if (f->next == 1)
-		f->next = 2;
+	if (f->next == PLAYA1)
+		f->next = PLAYA2;
 	else
-		f->next = 1;
+		f->next = PLAYA1;
+}
+
+char **alloc_char_2darr(int rows, int cols)
+{
+	char **arr;
+	int i;
+
+	arr = (char **)malloc(sizeof(char *) * rows);
+	if (!arr)
+		return (0);
+	ft_memset(arr, 0, sizeof(char *) * rows);
+	i = 0;
+	while (i < rows)
+	{
+		arr[i] = ft_strnew(cols);
+		if (!arr[i])
+		{
+			free_char_2darr(arr, rows);
+			return (0);
+		}
+		i++;
+	}
+	arr[i] = 0;
+	return (arr);
+}
+
+void	free_char_2darr(char **arr, int rows)
+{
+	int	i;
+
+	i = 0;
+	while (arr[i] && i < rows)
+	{
+		ft_strdel(arr + i);
+		i++;
+	}
+	ft_memdel((void **)arr);
 }

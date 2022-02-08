@@ -6,7 +6,7 @@
 /*   By: rodrodri <rodrodri@student.hive.fi >       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/02/03 16:24:50 by rodrodri          #+#    #+#             */
-/*   Updated: 2022/02/06 22:33:50 by rodrodri         ###   ########.fr       */
+/*   Updated: 2022/02/08 17:13:26 by rodrodri         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,7 +18,10 @@
 # define BOARD_SIZE_LN	"Plateau"
 # define PIECE_SIZE_LN	"Piece"
 # define FIRST_BOARD_LN	"000"
-# define PLAYA_LN		"$$$ exec"
+# define WHOS_PLAYA1_LN	"$$$ exec p1"
+# define LAST_MOVE_LN	"<got"
+# define PLAYA1			'O'
+# define PLAYA2			'X'
 
 #include <stdio.h> // <=======Don't forget to delete this!!!
 
@@ -27,13 +30,16 @@
 */
 typedef struct s_filler
 {
-	char	*board;
-	char	*token;
-	int		we;
-	int		rows;
-	int		cols;
-	int		token_rows;
-	int		token_cols;
+	char	**board;
+	char	**token;
+	char	*line;
+	char	*heat_map;
+	char	our_playa;
+	char	other_playa;
+	int		b_rows;
+	int		b_cols;
+	int		p_rows;
+	int		p_cols;
 	int		next;
 	_Bool	greedy;
 }	t_filler;
@@ -41,16 +47,19 @@ typedef struct s_filler
 /*
 **	Prototypes
 */
-void	init_board(t_filler *f);
+int		get_size(char **line, int *rows, int *cols);
+int		alloc_board(t_filler *f);
 int		parse_board(t_filler *f);
-int		parse_digits(char **line);
-void	handle_token(t_filler *f);
+int		make_heatmap(t_filler *f);
+int		handle_piece(t_filler *f);
+int		parse_digits(char *line, int *n);
 
-char	*find_line(const char *str);
-void	skip_lines(int n);
-int		check_play(t_filler *f);
-void	print_board(t_filler *f);
-void	print_token(t_filler *f);
+char	**alloc_char_2darr(int rows, int cols);
+void	free_char_2darr(char **arr, int rows);
+int		find_line(char **ln, const char *str);
+int		skip_lines(t_filler *f, int n);
+int		check_play(char **ln);
+void	print_char2darr(char **str, int rows, int cols);
 void	toggle_next(t_filler *f);
 
 #endif

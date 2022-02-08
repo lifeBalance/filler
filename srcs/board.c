@@ -6,44 +6,24 @@
 /*   By: rodrodri <rodrodri@student.hive.fi >       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/02/06 12:03:50 by rodrodri          #+#    #+#             */
-/*   Updated: 2022/02/06 22:42:29 by rodrodri         ###   ########.fr       */
+/*   Updated: 2022/02/08 15:52:34 by rodrodri         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "libft.h"
 #include "filler.h"
 
-static void	get_board_size(t_filler *f);
-
 /*
 **	1. It parses the size of the board (in rows and columns)
 **	2. It allocates memory for a string to hold the board.
 **	3. Finally it parses the board cells.
 */
-void	init_board(t_filler *f)
+int	alloc_board(t_filler *f)
 {
-	get_board_size(f);
-	f->board = ft_strnew(f->rows * f->cols);
+	f->board = alloc_char_2darr(f->b_rows, f->b_cols);
 	if (!f->board)
-		exit(EXIT_FAILURE);
-	parse_board(f);
-}
-
-/*
-**	It fast-forwards to the line which contains the size of the board (the
-**	one that starts with "Plateau", and parses the number or rows and columns.
-*/
-static void	get_board_size(t_filler *f)
-{
-	char	*line;
-	char	*line_cpy;
-
-	line = find_line(BOARD_SIZE_LN);
-	line_cpy = line;
-	f->rows = parse_digits(&line);
-	f->cols = parse_digits(&line);
-	ft_strdel(&line_cpy);
-	ft_printf("rows: %d, cols: %d\n", f->rows, f->cols); // <=== delete me!!!!!
+		return (-1);
+	return (1);
 }
 
 /*
@@ -55,26 +35,30 @@ static void	get_board_size(t_filler *f)
 */
 int	parse_board(t_filler *f)
 {
-	char	*line;
-	char	*line_cpy;
+	char	*ln_cpy;
 	int		i;
+	int		j;
 
-	line = find_line(FIRST_BOARD_LN);
-	if (!line)
-		return (0);
 	i = 0;
-	while (1)
+	while (i < f->b_rows)
 	{
-		line_cpy = line;
-		line = ft_strchr(line, ' ') + 1;
-		while (*line && *line != '\n')
-			f->board[i++] = *(line++);
-		ft_strdel(&line_cpy);
-		if (i < f->rows * f->cols)
-			get_next_line(0, &line);
+		if (i == 0)
+		{
+			if (find_line(&f->line, FIRST_BOARD_LN) < 0)
+				return (-1);
+		}
 		else
-			break ;
+			get_next_line(STDIN_FILENO, &f->line);
+		ln_cpy = f->line;
+		ln_cpy = ft_strchr(ln_cpy, ' ') + 1;
+		j = 0;
+		while (j < f->b_cols && *ln_cpy && *ln_cpy != '\n')
+		{
+			f->board[i][j] = ln_cpy[j];
+			j++;
+		}
+		ft_strdel(&f->line);
+		i++;
 	}
-	print_board(f); // <=== delete me!!!!!
-	return (1);
+	return (0);
 }
