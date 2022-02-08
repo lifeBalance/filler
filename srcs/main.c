@@ -6,39 +6,65 @@
 /*   By: rodrodri <rodrodri@student.hive.fi >       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/02/03 16:22:48 by rodrodri          #+#    #+#             */
-/*   Updated: 2022/02/08 17:10:10 by rodrodri         ###   ########.fr       */
+/*   Updated: 2022/02/08 23:16:37 by rodrodri         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "libft.h"
 #include "filler.h"
 
-int		get_our_playa(t_filler *f);
+static int	init_filler(t_filler *f);
+static int	get_our_playa(t_filler *f);
 
 int	main(void)
 {
 	t_filler	f;
 
-	ft_memset(&f, 0, sizeof(f));
-	if (get_our_playa(&f) <= 0)
+	if (init_filler(&f) < 0)
 		return (-1);
-	if (find_line(&f.line, BOARD_SIZE_LN))
-		get_size(&f.line, &f.b_rows, &f.b_cols);
-	else
-		return (-1);
-	if (alloc_board(&f) < 0 || parse_board(&f) < 0)
-		return (-1);
-	f.next = PLAYA1;
-	while (1)
+	print_char2darr(f.board); // <=== delete me!!!!!
+	while (get_next_line(STDIN_FILENO, &f.line) > 0)
 	{
-		print_char2darr(f.board, f.b_rows, f.b_cols); // <=== delete me!!!!!
-		if (handle_piece(&f) < 0)
+		if (ft_strstr(f.line, PIECE_SIZE_LN))
+			handle_piece(&f);
+		else if (ft_strstr(f.line, LAST_MOVE_LN))
+			check_play(&f);
+		else if (ft_strstr(f.line, FIRST_BOARD_LN))
+		{
+			parse_board(&f);
+			print_char2darr(f.board); // <=== delete me!!!!!
+		}
+		else if (ft_strstr(f.line, END_GAME_LN))
+		{
+			ft_strdel(&f.line);
 			break ;
-		if (parse_board(&f) < 0)
-			break ;
+		}
+		else
+			ft_strdel(&f.line);
 	}
-	free_char_2darr(f.board, f.b_rows);
+	free_char_2darr(f.board);
 	system("leaks rodrodri.filler");
+	return (0);
+}
+
+static int	init_filler(t_filler *f)
+{
+	ft_memset(f, 0, sizeof(*f));
+	if (get_our_playa(f) <= 0)
+		return (-1);
+	// printf("playa %c\n", f->our_playa);
+	if (find_line(&f->line, BOARD_SIZE_LN) <= 0)
+		return (-1);
+	// printf("board size line: %s\n", f->line);
+	if (get_size(&f->line, &f->b_rows, &f->b_cols) < 0)
+		return (-1);
+	// printf("rows: %d cols: %d\n", f->b_rows, f->b_cols);
+	if (find_line(&f->line, FIRST_BOARD_LN) <= 0)
+		return (-1);
+	// printf("first board line: %s\n", f->line);
+	if (alloc_board(f) < 0 || parse_board(f) < 0)
+		return (-1);
+	f->next_turn = PLAYA1;
 	return (0);
 }
 

@@ -6,7 +6,7 @@
 /*   By: rodrodri <rodrodri@student.hive.fi >       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/02/06 12:03:50 by rodrodri          #+#    #+#             */
-/*   Updated: 2022/02/08 15:52:34 by rodrodri         ###   ########.fr       */
+/*   Updated: 2022/02/08 19:37:51 by rodrodri         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -42,12 +42,7 @@ int	parse_board(t_filler *f)
 	i = 0;
 	while (i < f->b_rows)
 	{
-		if (i == 0)
-		{
-			if (find_line(&f->line, FIRST_BOARD_LN) < 0)
-				return (-1);
-		}
-		else
+		if (i > 0)
 			get_next_line(STDIN_FILENO, &f->line);
 		ln_cpy = f->line;
 		ln_cpy = ft_strchr(ln_cpy, ' ') + 1;

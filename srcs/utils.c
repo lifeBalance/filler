@@ -6,7 +6,7 @@
 /*   By: rodrodri <rodrodri@student.hive.fi >       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/02/06 12:07:35 by rodrodri          #+#    #+#             */
-/*   Updated: 2022/02/08 17:19:12 by rodrodri         ###   ########.fr       */
+/*   Updated: 2022/02/08 23:15:36 by rodrodri         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -48,7 +48,6 @@ int	parse_digits(char *line, int *n)
 **	Return values:
 **		- If the line is found, 1.
 **		- If the line is NOT found, 0.
-**		- If the END LINE ("fin") found, -1.
 */
 int	find_line(char **ln, const char *str)
 {
@@ -59,11 +58,6 @@ int	find_line(char **ln, const char *str)
 	{
 		if (ft_strstr(*ln, str))
 			return (1);
-		else if (ft_strstr(*ln, "fin"))
-		{
-			ft_strdel(ln);
-			return (-1);
-		}
 		else
 		{
 			ft_strdel(ln);
@@ -88,52 +82,18 @@ int	skip_lines(t_filler *f, int n)
 }
 
 /*
-**	It reads the line with the last play, checking if its value is "[0, 0]"
-**	It also determines the player that played last, setting the 'last_move'
-**	field accordingly.
-**	Regardless of the player, it returns 0 if the last play was "[0, 0]",
-**	and 1 otherwise.
-*/
-int		check_play(char **ln)
-{
-	int		play;
-
-	get_next_line(STDIN_FILENO, ln);
-	if (ft_strstr(*ln, "[0, 0]"))
-		play = 0;
-	else
-		play = 1;
-	if (play == 0) // <=================================== delete me!!!!
-		ft_printf("other guy moved [0, 0]\n");
-	ft_strdel(ln);
-	return (play);
-}
-
-/*
 **	It prints the token and releases it when done. It doesn't return anything.
 */
-void	print_char2darr(char **str, int rows, int cols)
+void	print_char2darr(char **str)
 {
 	int		i;
-	int		j;
 
 	i = 0;
-	while (i < rows)
+	while (str[i])
 	{
-		j = 0;
-		while (j < cols)
-			ft_printf("%c", str[i][j++]);
-		ft_putchar('\n');
+		ft_printf("%s\n", str[i]);
 		i++;
 	}
-}
-
-void	toggle_next(t_filler *f)
-{
-	if (f->next == PLAYA1)
-		f->next = PLAYA2;
-	else
-		f->next = PLAYA1;
 }
 
 char **alloc_char_2darr(int rows, int cols)
@@ -141,17 +101,17 @@ char **alloc_char_2darr(int rows, int cols)
 	char **arr;
 	int i;
 
-	arr = (char **)malloc(sizeof(char *) * rows);
+	arr = (char **)malloc(sizeof(char *) * (rows + 1));
 	if (!arr)
 		return (0);
-	ft_memset(arr, 0, sizeof(char *) * rows);
+	ft_memset(arr, 0, sizeof(char *) * (rows + 1));
 	i = 0;
 	while (i < rows)
 	{
 		arr[i] = ft_strnew(cols);
 		if (!arr[i])
 		{
-			free_char_2darr(arr, rows);
+			free_char_2darr(arr);
 			return (0);
 		}
 		i++;
@@ -160,12 +120,12 @@ char **alloc_char_2darr(int rows, int cols)
 	return (arr);
 }
 
-void	free_char_2darr(char **arr, int rows)
+void	free_char_2darr(char **arr)
 {
 	int	i;
 
 	i = 0;
-	while (arr[i] && i < rows)
+	while (arr[i])
 	{
 		ft_strdel(arr + i);
 		i++;
