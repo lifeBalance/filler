@@ -6,7 +6,7 @@
 /*   By: rodrodri <rodrodri@student.hive.fi >       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/02/03 16:22:48 by rodrodri          #+#    #+#             */
-/*   Updated: 2022/02/09 17:43:25 by rodrodri         ###   ########.fr       */
+/*   Updated: 2022/02/09 17:50:44 by rodrodri         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -54,7 +54,10 @@ static int	init_filler(t_filler *f)
 		return (-1);
 	if (find_line(&f->line, FIRST_BOARD_LN) <= 0)
 		return (-1);
-	if (alloc_board(f) < 0 || parse_board(f) < 0)
+	f->board = alloc_char_2darr(f->b_rows, f->b_cols);
+	if (!f->board)
+		return (-1);
+	if (parse_board(f) < 0)
 		return (-1);
 	f->next_turn = PLAYA1;
 	return (0);

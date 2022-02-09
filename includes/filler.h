@@ -6,7 +6,7 @@
 /*   By: rodrodri <rodrodri@student.hive.fi >       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/02/03 16:24:50 by rodrodri          #+#    #+#             */
-/*   Updated: 2022/02/09 13:57:38 by rodrodri         ###   ########.fr       */
+/*   Updated: 2022/02/09 17:51:42 by rodrodri         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -50,7 +50,6 @@ typedef struct s_filler
 **	Prototypes
 */
 int		get_size(char **line, int *rows, int *cols);
-int		alloc_board(t_filler *f);
 int		parse_board(t_filler *f);
 int		make_heatmap(t_filler *f);
 int		handle_piece(t_filler *f);

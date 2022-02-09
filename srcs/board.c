@@ -6,25 +6,12 @@
 /*   By: rodrodri <rodrodri@student.hive.fi >       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/02/06 12:03:50 by rodrodri          #+#    #+#             */
-/*   Updated: 2022/02/09 12:21:35 by rodrodri         ###   ########.fr       */
+/*   Updated: 2022/02/09 17:51:17 by rodrodri         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "libft.h"
 #include "filler.h"
-
-/*
-**	1. It parses the size of the board (in rows and columns)
-**	2. It allocates memory for a string to hold the board.
-**	3. Finally it parses the board cells.
-*/
-int	alloc_board(t_filler *f)
-{
-	f->board = alloc_char_2darr(f->b_rows, f->b_cols);
-	if (!f->board)
-		return (-1);
-	return (1);
-}
 
 /*
 **	It fast-forwards to the first line of the board (jumping over the line that
