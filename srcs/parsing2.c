@@ -1,12 +1,12 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   play.c                                             :+:      :+:    :+:   */
+/*   parsing2.c                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: rodrodri <rodrodri@student.hive.fi >       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/02/06 12:03:50 by rodrodri          #+#    #+#             */
-/*   Updated: 2022/02/09 17:47:36 by rodrodri         ###   ########.fr       */
+/*   Updated: 2022/02/09 18:23:46 by rodrodri         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,6 +14,38 @@
 #include "filler.h"
 
 static void	set_next_turn(t_filler *f);
+static int	parse_digits(char *line, int *n);
+
+int	get_size(char **ln, int *rows, int *cols)
+{
+	int		advance;
+
+	advance = parse_digits(*ln, rows);
+	parse_digits(*ln + advance, cols);
+	ft_strdel(ln);
+	return (1);
+}
+
+/*
+**	It parses its 'str' argument (the address of a string), searching for
+**	digits, which are stored in an 'int' variable returned at the end.
+*/
+int	parse_digits(char *line, int *n)
+{
+	int	i;
+
+	i = 0;
+	while (!ft_isdigit(line[i]))
+		i++;
+	*n = 0;
+	while (line[i] && ft_isdigit(line[i]))
+	{
+		*n = *n * 10 + (line[i] - '0');
+		i++;
+	}
+	return (i);
+}
+
 
 /*
 **	It reads the line with the last play, checking if its value is "[0, 0]"

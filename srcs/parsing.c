@@ -1,19 +1,73 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   piece.c                                            :+:      :+:    :+:   */
+/*   parsing.c                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: rodrodri <rodrodri@student.hive.fi >       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/02/06 12:03:50 by rodrodri          #+#    #+#             */
-/*   Updated: 2022/02/09 17:45:21 by rodrodri         ###   ########.fr       */
+/*   Updated: 2022/02/09 18:21:30 by rodrodri         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "libft.h"
 #include "filler.h"
 
-void	parse_piece(t_filler *f);
+static void	parse_piece(t_filler *f);
+
+/*
+**	It finds the line starting with '$$$ exec p1', and checks if it
+**	contains our player name. If so, we're player 1, otherwise we're player 2.
+**	(It could be refactored to also extract both player names and store them
+**	in dedicated fields of the t_filler structure; can be used for visualize).
+*/
+int	get_our_playa(t_filler *f)
+{
+	int	ret;
+
+	ret = find_line(&f->line, WHOS_PLAYA1_LN);
+	if (ret < 0)
+		return (-1);
+	else if (ret == 0)
+		return (0);
+	if (ft_strstr(f->line, AUTHOR))
+	{
+		f->our_playa = PLAYA1;
+		f->other_playa = PLAYA2;
+	}
+	else
+	{
+		f->our_playa = PLAYA2;
+		f->other_playa = PLAYA1;
+	}
+	ft_strdel(&f->line);
+	return (1);
+}
+
+/*
+**	It fast-forwards to the first line of the board (jumping over the line that
+**	serves as header for the columns), and start parsing the cells.
+**	At each line, it jumps over the column at the very beginning, which
+**	contains the number of the row.
+**	It stops reading lines at the very last line of the board.
+*/
+int	parse_board(t_filler *f)
+{
+	int		i;
+	int		offset;
+
+	i = 0;
+	while (i < f->b_rows)
+	{
+		if (i > 0)
+			get_next_line(STDIN_FILENO, &f->line);
+		offset = (ft_strchr(f->line, ' ') + 1) - f->line;
+		ft_strncpy(f->board[i], f->line + offset, f->b_cols);
+		ft_strdel(&f->line);
+		i++;
+	}
+	return (0);
+}
 
 /*
 **	It starts by getting the size of the piece:
@@ -47,7 +101,7 @@ int	handle_piece(t_filler *f)
 	return (1);
 }
 
-void	parse_piece(t_filler *f)
+static void	parse_piece(t_filler *f)
 {
 	int		i;
 

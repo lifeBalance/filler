@@ -6,7 +6,7 @@
 /*   By: rodrodri <rodrodri@student.hive.fi >       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/02/03 16:24:50 by rodrodri          #+#    #+#             */
-/*   Updated: 2022/02/09 17:51:42 by rodrodri         ###   ########.fr       */
+/*   Updated: 2022/02/09 18:24:39 by rodrodri         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -49,17 +49,18 @@ typedef struct s_filler
 /*
 **	Prototypes
 */
+int		get_our_playa(t_filler *f);
 int		get_size(char **line, int *rows, int *cols);
 int		parse_board(t_filler *f);
-int		make_heatmap(t_filler *f);
 int		handle_piece(t_filler *f);
-int		parse_digits(char *line, int *n);
+int		check_play(t_filler *f);
 
 char	**alloc_char_2darr(int rows, int cols);
 void	free_char_2darr(char **arr);
 int		find_line(char **ln, const char *str);
 int		skip_lines(char **str, int n);
-int		check_play(t_filler *f);
 void	print_char2darr(char **str);
+
+int		make_heatmap(t_filler *f);
 
 #endif

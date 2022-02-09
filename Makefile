@@ -6,7 +6,7 @@
 #    By: rodrodri <rodrodri@student.hive.fi >       +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2022/02/03 16:19:55 by rodrodri          #+#    #+#              #
-#    Updated: 2022/02/08 19:20:51 by rodrodri         ###   ########.fr        #
+#    Updated: 2022/02/09 18:18:18 by rodrodri         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -24,7 +24,7 @@ vpath	%.c ./srcs
 
 OBJS	=	$(patsubst %,$(OBJS_DIR)/%,$(SRCS:.c=.o))
 HDRS	=	filler.h
-SRCS	=	main.c board.c piece.c play.c utils.c heat_map.c
+SRCS	=	main.c parsing.c parsing2.c utils.c heat_map.c
 
 all:		$(NAME)
 

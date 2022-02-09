@@ -6,7 +6,7 @@
 /*   By: rodrodri <rodrodri@student.hive.fi >       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/02/03 16:22:48 by rodrodri          #+#    #+#             */
-/*   Updated: 2022/02/09 17:50:44 by rodrodri         ###   ########.fr       */
+/*   Updated: 2022/02/09 18:21:01 by rodrodri         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,7 +14,6 @@
 #include "filler.h"
 
 static int	init_filler(t_filler *f);
-static int	get_our_playa(t_filler *f);
 
 int	main(void)
 {
@@ -61,33 +60,4 @@ static int	init_filler(t_filler *f)
 		return (-1);
 	f->next_turn = PLAYA1;
 	return (0);
-}
-
-/*
-**	It finds the line starting with '$$$ exec p1', and checks if it
-**	contains our player name. If so, we're player 1, otherwise we're player 2.
-**	(It could be refactored to also extract both player names and store them
-**	in dedicated fields of the t_filler structure; can be used for visualize).
-*/
-int	get_our_playa(t_filler *f)
-{
-	int	ret;
-
-	ret = find_line(&f->line, WHOS_PLAYA1_LN);
-	if (ret < 0)
-		return (-1);
-	else if (ret == 0)
-		return (0);
-	if (ft_strstr(f->line, AUTHOR))
-	{
-		f->our_playa = PLAYA1;
-		f->other_playa = PLAYA2;
-	}
-	else
-	{
-		f->our_playa = PLAYA2;
-		f->other_playa = PLAYA1;
-	}
-	ft_strdel(&f->line);
-	return (1);
 }
