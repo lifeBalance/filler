@@ -6,7 +6,7 @@
 /*   By: rodrodri <rodrodri@student.hive.fi >       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/02/03 16:22:48 by rodrodri          #+#    #+#             */
-/*   Updated: 2022/02/08 23:16:37 by rodrodri         ###   ########.fr       */
+/*   Updated: 2022/02/09 14:03:28 by rodrodri         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,19 +28,15 @@ int	main(void)
 		if (ft_strstr(f.line, PIECE_SIZE_LN))
 			handle_piece(&f);
 		else if (ft_strstr(f.line, LAST_MOVE_LN))
-			check_play(&f);
+		{
+			if (check_play(&f) < 0)
+				break ;
+		}
 		else if (ft_strstr(f.line, FIRST_BOARD_LN))
 		{
 			parse_board(&f);
 			print_char2darr(f.board); // <=== delete me!!!!!
 		}
-		else if (ft_strstr(f.line, END_GAME_LN))
-		{
-			ft_strdel(&f.line);
-			break ;
-		}
-		else
-			ft_strdel(&f.line);
 	}
 	free_char_2darr(f.board);
 	system("leaks rodrodri.filler");

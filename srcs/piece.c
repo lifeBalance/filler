@@ -6,7 +6,7 @@
 /*   By: rodrodri <rodrodri@student.hive.fi >       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/02/06 12:03:50 by rodrodri          #+#    #+#             */
-/*   Updated: 2022/02/08 23:12:48 by rodrodri         ###   ########.fr       */
+/*   Updated: 2022/02/09 13:59:30 by rodrodri         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,21 +28,21 @@ void	parse_piece(t_filler *f);
 int	handle_piece(t_filler *f)
 {
 	get_size(&f->line, &f->p_rows, &f->p_cols);
+	if (!f->line)
+		ft_strdel(&f->line);
 	if (f->our_playa == f->next_turn || f->oponent_quit)
 	{
-		if (skip_lines(f, f->p_rows) <= 0)
-			return (-1);
 		ft_printf("Our piece was %d %d\n", f->p_rows, f->p_cols);
-		// f->piece = alloc_char_2darr(f->p_rows, f->p_cols);
-		// if (!f->piece)
-		// 	return (-1);
-		// parse_piece(f);
-		// print_char2darr(f->piece, f->p_rows, f->p_cols); //<-- delete me!!
-		// free_char_2darr(f->piece); //<-- only after you place it!!!
+		f->piece = alloc_char_2darr(f->p_rows, f->p_cols);
+		if (!f->piece)
+			return (-1);
+		parse_piece(f);
+		print_char2darr(f->piece); //<-- delete me!!
+		free_char_2darr(f->piece); //<-- only after you place it!!!
 	}
 	else
 	{
-		if (skip_lines(f, f->p_rows) <= 0)
+		if (skip_lines(&f->line, f->p_rows) <= 0)
 			return (-1);
 		ft_printf("Skipped other guy's piece (%d %d)\n", f->p_rows, f->p_cols);
 	}
@@ -52,18 +52,12 @@ int	handle_piece(t_filler *f)
 void	parse_piece(t_filler *f)
 {
 	int		i;
-	int		j;
 
 	i = 0;
 	while (i < f->p_rows)
 	{
 		get_next_line(STDIN_FILENO, &f->line);
-		j = 0;
-		while (j < f->p_cols)
-		{
-			f->piece[i][j] = f->line[j];
-			j++;
-		}
+		ft_strncpy(f->piece[i], f->line, f->p_cols);
 		ft_strdel(&f->line);
 		i++;
 	}

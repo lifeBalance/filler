@@ -6,7 +6,7 @@
 /*   By: rodrodri <rodrodri@student.hive.fi >       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/02/06 12:03:50 by rodrodri          #+#    #+#             */
-/*   Updated: 2022/02/08 19:37:51 by rodrodri         ###   ########.fr       */
+/*   Updated: 2022/02/09 12:21:35 by rodrodri         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -35,23 +35,16 @@ int	alloc_board(t_filler *f)
 */
 int	parse_board(t_filler *f)
 {
-	char	*ln_cpy;
 	int		i;
-	int		j;
+	int		offset;
 
 	i = 0;
 	while (i < f->b_rows)
 	{
 		if (i > 0)
 			get_next_line(STDIN_FILENO, &f->line);
-		ln_cpy = f->line;
-		ln_cpy = ft_strchr(ln_cpy, ' ') + 1;
-		j = 0;
-		while (j < f->b_cols && *ln_cpy && *ln_cpy != '\n')
-		{
-			f->board[i][j] = ln_cpy[j];
-			j++;
-		}
+		offset = (ft_strchr(f->line, ' ') + 1) - f->line;
+		ft_strncpy(f->board[i], f->line + offset, f->b_cols);
 		ft_strdel(&f->line);
 		i++;
 	}

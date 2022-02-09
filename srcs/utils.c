@@ -6,7 +6,7 @@
 /*   By: rodrodri <rodrodri@student.hive.fi >       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/02/06 12:07:35 by rodrodri          #+#    #+#             */
-/*   Updated: 2022/02/08 23:15:36 by rodrodri         ###   ########.fr       */
+/*   Updated: 2022/02/09 14:11:11 by rodrodri         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -53,6 +53,8 @@ int	find_line(char **ln, const char *str)
 {
 	int		ret;
 
+	if (!(*ln))
+		ft_strdel(ln);
 	ret = get_next_line(STDIN_FILENO, ln);
 	while (ret > 0)
 	{
@@ -70,13 +72,15 @@ int	find_line(char **ln, const char *str)
 /*
 **	It skips a given number of lines, freeing allocated lines along the way.
 */
-int	skip_lines(t_filler *f, int n)
+int	skip_lines(char **str, int n)
 {
+	if (!(*str))
+		ft_strdel(str);
 	while (n--)
 	{
-		if (get_next_line(STDIN_FILENO, &f->line) <= 0)
+		if (get_next_line(STDIN_FILENO, str) <= 0)
 			return (-1);
-		ft_strdel(&f->line);
+		ft_strdel(str);
 	}
 	return (1);
 }

@@ -6,7 +6,7 @@
 /*   By: rodrodri <rodrodri@student.hive.fi >       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/02/03 16:24:50 by rodrodri          #+#    #+#             */
-/*   Updated: 2022/02/08 23:15:56 by rodrodri         ###   ########.fr       */
+/*   Updated: 2022/02/09 13:57:38 by rodrodri         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -59,7 +59,7 @@ int		parse_digits(char *line, int *n);
 char	**alloc_char_2darr(int rows, int cols);
 void	free_char_2darr(char **arr);
 int		find_line(char **ln, const char *str);
-int		skip_lines(t_filler *f, int n);
+int		skip_lines(char **str, int n);
 int		check_play(t_filler *f);
 void	print_char2darr(char **str);
 

@@ -6,7 +6,7 @@
 /*   By: rodrodri <rodrodri@student.hive.fi >       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/02/06 12:03:50 by rodrodri          #+#    #+#             */
-/*   Updated: 2022/02/08 22:45:17 by rodrodri         ###   ########.fr       */
+/*   Updated: 2022/02/09 13:57:52 by rodrodri         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,7 +26,6 @@ int		check_play(t_filler *f)
 {
 	int		play;
 
-	// printf("Checking play...\n");
 	if (ft_strstr(f->line, "[0, 0]"))
 		play = 0;
 	else
@@ -36,16 +35,22 @@ int		check_play(t_filler *f)
 	ft_strdel(&f->line);
 	ft_printf("(%c) just played. Next goes (%c)\n",
 		f->just_played, f->next_turn); // <==== delete me!!!!
-	if (play == 0)
-	{
 		// ft_printf("other guy moved [0, 0]\n"); // <==== delete me!!!!
-		get_next_line(STDIN_FILENO, &f->line);
-		if (ft_strstr(f->line, PIECE_SIZE_LN))
-		{
-			f->oponent_quit = 1;
-			handle_piece(f);
-		} else
-			ft_strdel(&f->line);
+	get_next_line(STDIN_FILENO, &f->line);
+	if (ft_strstr(f->line, PIECE_SIZE_LN) && play == 0)
+	{
+		f->oponent_quit = 1;
+		handle_piece(f);
+	}
+	else if (ft_strstr(f->line, END_GAME_LN))
+	{
+		ft_strdel(&f->line);
+		return(-1);
+	}
+	else if (ft_strstr(f->line, BOARD_SIZE_LN))
+	{
+		ft_strdel(&f->line);
+		skip_lines(&f->line, 1);
 	}
 	return (play);
 }
