@@ -6,7 +6,7 @@
 /*   By: rodrodri <rodrodri@student.hive.fi >       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/02/06 12:03:50 by rodrodri          #+#    #+#             */
-/*   Updated: 2022/02/09 13:57:52 by rodrodri         ###   ########.fr       */
+/*   Updated: 2022/02/09 17:35:18 by rodrodri         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,11 +31,10 @@ int		check_play(t_filler *f)
 	else
 		play = 1;
 	f->just_played = *(ft_strchr(f->line, '(') + 1);
+	if (play == 0 && f->just_played == PLAYA2)//<========Delete me!!!
+		ft_printf("(%c) just quit!\n", f->other_playa);// <====== Delete me!!!!
 	set_next_turn(f);
 	ft_strdel(&f->line);
-	ft_printf("(%c) just played. Next goes (%c)\n",
-		f->just_played, f->next_turn); // <==== delete me!!!!
-		// ft_printf("other guy moved [0, 0]\n"); // <==== delete me!!!!
 	get_next_line(STDIN_FILENO, &f->line);
 	if (ft_strstr(f->line, PIECE_SIZE_LN) && play == 0)
 	{

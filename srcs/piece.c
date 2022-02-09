@@ -6,7 +6,7 @@
 /*   By: rodrodri <rodrodri@student.hive.fi >       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/02/06 12:03:50 by rodrodri          #+#    #+#             */
-/*   Updated: 2022/02/09 13:59:30 by rodrodri         ###   ########.fr       */
+/*   Updated: 2022/02/09 17:35:34 by rodrodri         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -32,13 +32,14 @@ int	handle_piece(t_filler *f)
 		ft_strdel(&f->line);
 	if (f->our_playa == f->next_turn || f->oponent_quit)
 	{
-		ft_printf("Our piece was %d %d\n", f->p_rows, f->p_cols);
+		// ft_printf("Our piece was %d %d\n", f->p_rows, f->p_cols);
 		f->piece = alloc_char_2darr(f->p_rows, f->p_cols);
 		if (!f->piece)
 			return (-1);
 		parse_piece(f);
 		print_char2darr(f->piece); //<-- delete me!!
 		free_char_2darr(f->piece); //<-- only after you place it!!!
+		free(f->piece);
 	}
 	else
 	{
