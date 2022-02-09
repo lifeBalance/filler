@@ -6,7 +6,7 @@
 /*   By: rodrodri <rodrodri@student.hive.fi >       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/02/06 12:03:50 by rodrodri          #+#    #+#             */
-/*   Updated: 2022/02/09 17:35:34 by rodrodri         ###   ########.fr       */
+/*   Updated: 2022/02/09 17:45:21 by rodrodri         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,11 +28,8 @@ void	parse_piece(t_filler *f);
 int	handle_piece(t_filler *f)
 {
 	get_size(&f->line, &f->p_rows, &f->p_cols);
-	if (!f->line)
-		ft_strdel(&f->line);
 	if (f->our_playa == f->next_turn || f->oponent_quit)
 	{
-		// ft_printf("Our piece was %d %d\n", f->p_rows, f->p_cols);
 		f->piece = alloc_char_2darr(f->p_rows, f->p_cols);
 		if (!f->piece)
 			return (-1);

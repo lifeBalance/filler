@@ -6,7 +6,7 @@
 /*   By: rodrodri <rodrodri@student.hive.fi >       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/02/03 16:22:48 by rodrodri          #+#    #+#             */
-/*   Updated: 2022/02/09 14:03:28 by rodrodri         ###   ########.fr       */
+/*   Updated: 2022/02/09 17:43:25 by rodrodri         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -48,16 +48,12 @@ static int	init_filler(t_filler *f)
 	ft_memset(f, 0, sizeof(*f));
 	if (get_our_playa(f) <= 0)
 		return (-1);
-	// printf("playa %c\n", f->our_playa);
 	if (find_line(&f->line, BOARD_SIZE_LN) <= 0)
 		return (-1);
-	// printf("board size line: %s\n", f->line);
 	if (get_size(&f->line, &f->b_rows, &f->b_cols) < 0)
 		return (-1);
-	// printf("rows: %d cols: %d\n", f->b_rows, f->b_cols);
 	if (find_line(&f->line, FIRST_BOARD_LN) <= 0)
 		return (-1);
-	// printf("first board line: %s\n", f->line);
 	if (alloc_board(f) < 0 || parse_board(f) < 0)
 		return (-1);
 	f->next_turn = PLAYA1;
