@@ -1,30 +1,37 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   heat_map.c                                         :+:      :+:    :+:   */
+/*   heatmap.h                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: rodrodri <rodrodri@student.hive.fi >       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2022/02/06 12:03:50 by rodrodri          #+#    #+#             */
-/*   Updated: 2022/02/07 16:55:52 by rodrodri         ###   ########.fr       */
+/*   Created: 2022/02/10 22:45:52 by rodrodri          #+#    #+#             */
+/*   Updated: 2022/02/10 22:46:01 by rodrodri         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "libft.h"
-#include "filler.h"
+#ifndef HEATMAP_H
+# define HEATMAP_H
 
-// int	create_heatmap(t_filler *f)
-// {
-// 	int	i;
+/*
+**	Type definitions
+*/
+typedef	struct s_heatmap
+{
+	int	**map;
+	int	rows;
+	int	cols;
+	int	r;
+	int	c;
+}	t_heatmap;
 
-// 	i = 0;
-// 	while (i < f->rows * f->cols)
-// 	{
-// 		if (f->board[i] == PLAYA2)
-// 		{
-			
-// 		}
-// 		i++;
-// 	}
-// 	return (0);
-// }
+/*
+**	Function prototypes
+*/
+int		hm_init(t_heatmap **hm, int rows, int cols, int val);
+int		make_heatmap(t_heatmap *hm);
+int		max_int(int a, int b);
+int 	**alloc_int_2darr(int rows, int cols);
+void	free_int_2darr(int **arr, int rows);
+
+#endif

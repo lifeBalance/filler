@@ -6,28 +6,31 @@
 /*   By: rodrodri <rodrodri@student.hive.fi >       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/02/03 16:22:48 by rodrodri          #+#    #+#             */
-/*   Updated: 2022/02/10 23:04:59 by rodrodri         ###   ########.fr       */
+/*   Updated: 2022/02/10 23:23:38 by rodrodri         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "libft.h"
 #include "filler.h"
+#include "heatmap.h"
 
-static int	init_filler(t_filler *f);
+static int	init_filler(t_filler *, t_heatmap *hm);
 
 int	main(void)
 {
 	t_filler	f;
+	t_heatmap	hm;
 
-	if (init_filler(&f) < 0)
+	if (init_filler(&f, &hm) < 0)
 		return (-1);
 	while (get_next_line(STDIN_FILENO, &f.line) > 0)
 	{
 		if (ft_strstr(f.line, FIRST_BOARD_LN))
 		{
 			parse_board(&f);
-			// make_filler_heatmap(&f);
+			// make_filler_heatmap(&f, &hm);
 			print_char2darr(f.board); // <=== delete me!!!!!
+			// print_filler_heatmap(&hm); // <=== delete me!!!!!
 		}
 		else if (ft_strstr(f.line, PIECE_SIZE_LN))
 			handle_piece(&f);
@@ -41,7 +44,7 @@ int	main(void)
 	return (0);
 }
 
-static int	init_filler(t_filler *f)
+static int	init_filler(t_filler *f, t_heatmap *hm)
 {
 	ft_memset(f, 0, sizeof(*f));
 	if (get_our_playa(f) <= 0)
@@ -53,6 +56,9 @@ static int	init_filler(t_filler *f)
 	f->board = alloc_char_2darr(f->b_rows, f->b_cols);
 	if (!f->board)
 		return (-1);
+	// if (hm_init(&hm, f->b_rows, f->b_cols, 0) < 0)
+	// 	return (-1);
+	(void)hm;
 	f->next_turn = PLAYA1;
 	return (0);
 }
