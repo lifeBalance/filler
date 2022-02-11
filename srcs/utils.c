@@ -6,7 +6,7 @@
 /*   By: rodrodri <rodrodri@student.hive.fi >       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/02/06 12:07:35 by rodrodri          #+#    #+#             */
-/*   Updated: 2022/02/09 18:21:58 by rodrodri         ###   ########.fr       */
+/*   Updated: 2022/02/11 16:05:42 by rodrodri         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -70,10 +70,10 @@ void	print_char2darr(char **str)
 	}
 }
 
-char **alloc_char_2darr(int rows, int cols)
+char	**alloc_char_2darr(int rows, int cols)
 {
-	char **arr;
-	int i;
+	char	**arr;
+	int		i;
 
 	arr = (char **)malloc(sizeof(char *) * (rows + 1));
 	if (!arr)
@@ -89,8 +89,8 @@ char **alloc_char_2darr(int rows, int cols)
 			return (0);
 		}
 		i++;
+		arr[i] = 0;
 	}
-	arr[i] = 0;
 	return (arr);
 }
 
@@ -104,5 +104,4 @@ void	free_char_2darr(char **arr)
 		ft_strdel(arr + i);
 		i++;
 	}
-	ft_memdel((void **)arr);
 }

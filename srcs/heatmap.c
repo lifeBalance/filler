@@ -6,7 +6,7 @@
 /*   By: rodrodri <rodrodri@student.hive.fi >       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/02/10 22:46:17 by rodrodri          #+#    #+#             */
-/*   Updated: 2022/02/10 22:46:20 by rodrodri         ###   ########.fr       */
+/*   Updated: 2022/02/11 16:07:15 by rodrodri         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,27 +17,24 @@ static void	surround(t_heatmap *hm);
 static void	surround_east(t_heatmap *hm, int n, int i);
 static void	surround_west(t_heatmap *hm, int n, int i);
 
-int	hm_init(t_heatmap **hm, int rows, int cols, int val)
+int	hm_init(t_heatmap *hm, int rows, int cols, int val)
 {
 	int	i;
 	int	j;
 
-	*hm = (t_heatmap *)malloc(sizeof(t_heatmap));
-	if (!(*hm))
+	hm->map = alloc_int_2darr(rows, cols);
+	if (!hm->map)
 		return (-1);
-	(*hm)->map = alloc_int_2darr(rows, cols);
-	if (!(*hm)->map)
-		return (-1);
-	(*hm)->rows = rows;
-	(*hm)->cols = cols;
-	(*hm)->r = 0;
-	(*hm)->c = 0;
+	hm->rows = rows;
+	hm->cols = cols;
+	hm->r = 0;
+	hm->c = 0;
 	i = 0;
 	while (i < rows)
 	{
 		j = 0;
 		while (j < cols)
-			(*hm)->map[i][j++] = val;
+			hm->map[i][j++] = val;
 		i++;
 	}
 	return (0);

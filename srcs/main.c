@@ -6,7 +6,7 @@
 /*   By: rodrodri <rodrodri@student.hive.fi >       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/02/03 16:22:48 by rodrodri          #+#    #+#             */
-/*   Updated: 2022/02/10 23:23:38 by rodrodri         ###   ########.fr       */
+/*   Updated: 2022/02/11 16:02:59 by rodrodri         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,7 +14,7 @@
 #include "filler.h"
 #include "heatmap.h"
 
-static int	init_filler(t_filler *, t_heatmap *hm);
+static int	init_filler(t_filler *f, t_heatmap *hm);
 
 int	main(void)
 {
@@ -28,9 +28,9 @@ int	main(void)
 		if (ft_strstr(f.line, FIRST_BOARD_LN))
 		{
 			parse_board(&f);
-			// make_filler_heatmap(&f, &hm);
+			make_filler_heatmap(&f, &hm);
 			print_char2darr(f.board); // <=== delete me!!!!!
-			// print_filler_heatmap(&hm); // <=== delete me!!!!!
+			print_filler_heatmap(&hm); // <=== delete me!!!!!
 		}
 		else if (ft_strstr(f.line, PIECE_SIZE_LN))
 			handle_piece(&f);
@@ -40,6 +40,7 @@ int	main(void)
 			ft_strdel(&f.line);
 	}
 	free_char_2darr(f.board);
+	free_int_2darr(hm.map);
 	system("leaks rodrodri.filler");
 	return (0);
 }
@@ -56,9 +57,8 @@ static int	init_filler(t_filler *f, t_heatmap *hm)
 	f->board = alloc_char_2darr(f->b_rows, f->b_cols);
 	if (!f->board)
 		return (-1);
-	// if (hm_init(&hm, f->b_rows, f->b_cols, 0) < 0)
-	// 	return (-1);
-	(void)hm;
+	if (hm_init(hm, f->b_rows, f->b_cols, 0) < 0)
+		return (-1);
 	f->next_turn = PLAYA1;
 	return (0);
 }
