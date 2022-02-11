@@ -6,7 +6,7 @@
 /*   By: rodrodri <rodrodri@student.hive.fi >       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/02/06 12:03:50 by rodrodri          #+#    #+#             */
-/*   Updated: 2022/02/11 16:08:01 by rodrodri         ###   ########.fr       */
+/*   Updated: 2022/02/11 22:33:05 by rodrodri         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -50,8 +50,10 @@ int	parse_digits(char *line, int *n)
 **	It reads the line with the last play, checking if its value is "[0, 0]"
 **	It also determines the player that played last, setting the 'last_move'
 **	field accordingly.
-**	Regardless of the player, it returns 0 if the last play was "[0, 0]",
-**	and 1 otherwise.
+**	Regardless of the player, it returns:
+**		*  0 if the last play was "[0, 0]", or
+**		*  1 otherwise.
+**		* -1 if the next line is '== ... fin'
 */
 int	check_play(t_filler *f)
 {
@@ -62,7 +64,8 @@ int	check_play(t_filler *f)
 	if (ft_strstr(f->line, PIECE_SIZE_LN))
 	{
 		f->oponent_quit = 1;
-		handle_piece(f);
+		return (0);
+		// handle_piece(f);
 	}
 	else if (ft_strstr(f->line, END_GAME_LN))
 	{
@@ -74,7 +77,7 @@ int	check_play(t_filler *f)
 		ft_strdel(&f->line);
 		skip_lines(&f->line, 1);
 	}
-	return (0);
+	return (1);
 }
 
 static void	set_next_turn(t_filler *f)

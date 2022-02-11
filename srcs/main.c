@@ -6,7 +6,7 @@
 /*   By: rodrodri <rodrodri@student.hive.fi >       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/02/03 16:22:48 by rodrodri          #+#    #+#             */
-/*   Updated: 2022/02/11 16:02:59 by rodrodri         ###   ########.fr       */
+/*   Updated: 2022/02/11 23:25:08 by rodrodri         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,10 +30,19 @@ int	main(void)
 			parse_board(&f);
 			make_filler_heatmap(&f, &hm);
 			print_char2darr(f.board); // <=== delete me!!!!!
-			print_filler_heatmap(&hm); // <=== delete me!!!!!
+			// print_filler_heatmap(&hm); // <=== delete me!!!!!
 		}
 		else if (ft_strstr(f.line, PIECE_SIZE_LN))
+		{
 			handle_piece(&f);
+			if (f.next_turn == f.our_playa || f.oponent_quit)
+			{
+				place_piece(&f, &hm);
+				free_char_2darr(f.piece);
+				free(f.piece);
+			}
+		}
+		// move logic below to the end of 'handle_piece'
 		else if (ft_strstr(f.line, LAST_MOVE_LN) && check_play(&f) < 0)
 			break ;
 		else

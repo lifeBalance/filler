@@ -6,7 +6,7 @@
 /*   By: rodrodri <rodrodri@student.hive.fi >       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/02/03 16:24:50 by rodrodri          #+#    #+#             */
-/*   Updated: 2022/02/11 12:08:04 by rodrodri         ###   ########.fr       */
+/*   Updated: 2022/02/11 20:10:55 by rodrodri         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -54,6 +54,7 @@ int		get_our_playa(t_filler *f);
 int		get_size(char **line, int *rows, int *cols);
 int		parse_board(t_filler *f);
 int		handle_piece(t_filler *f);
+int		place_piece(t_filler *f, t_heatmap *hm);
 int		check_play(t_filler *f);
 
 char	**alloc_char_2darr(int rows, int cols);

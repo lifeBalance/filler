@@ -6,7 +6,7 @@
 /*   By: rodrodri <rodrodri@student.hive.fi >       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/02/06 12:03:50 by rodrodri          #+#    #+#             */
-/*   Updated: 2022/02/09 18:21:30 by rodrodri         ###   ########.fr       */
+/*   Updated: 2022/02/11 23:21:24 by rodrodri         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -88,9 +88,7 @@ int	handle_piece(t_filler *f)
 		if (!f->piece)
 			return (-1);
 		parse_piece(f);
-		print_char2darr(f->piece); //<-- delete me!!
-		free_char_2darr(f->piece); //<-- only after you place it!!!
-		free(f->piece);
+		// print_char2darr(f->piece); //<-- delete me!!
 	}
 	else
 	{
