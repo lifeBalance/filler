@@ -6,7 +6,7 @@
 /*   By: rodrodri <rodrodri@student.hive.fi >       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/02/03 16:22:48 by rodrodri          #+#    #+#             */
-/*   Updated: 2022/02/11 23:25:08 by rodrodri         ###   ########.fr       */
+/*   Updated: 2022/02/12 13:09:21 by rodrodri         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,6 +20,7 @@ int	main(void)
 {
 	t_filler	f;
 	t_heatmap	hm;
+	int			ret;
 
 	if (init_filler(&f, &hm) < 0)
 		return (-1);
@@ -34,17 +35,18 @@ int	main(void)
 		}
 		else if (ft_strstr(f.line, PIECE_SIZE_LN))
 		{
-			handle_piece(&f);
-			if (f.next_turn == f.our_playa || f.oponent_quit)
+			handle_piece(&f, &hm);
+			ret = check_play(&f);// this puts another line in the heap!!
+			if (ret < 0)
 			{
-				place_piece(&f, &hm);
-				free_char_2darr(f.piece);
-				free(f.piece);
+				ft_strdel(&f.line);// which we delete here ('== fin')
+				break ;
 			}
+			else if (ret > 0)
+				ft_strdel(&f.line);// and here (another Plateau)
+			else		// if it's zero, our opponent quit!
+				handle_piece(&f, &hm);// f.line has the Piece SIZE
 		}
-		// move logic below to the end of 'handle_piece'
-		else if (ft_strstr(f.line, LAST_MOVE_LN) && check_play(&f) < 0)
-			break ;
 		else
 			ft_strdel(&f.line);
 	}

@@ -6,7 +6,7 @@
 /*   By: rodrodri <rodrodri@student.hive.fi >       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/02/06 12:03:50 by rodrodri          #+#    #+#             */
-/*   Updated: 2022/02/11 22:33:05 by rodrodri         ###   ########.fr       */
+/*   Updated: 2022/02/12 13:13:43 by rodrodri         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -57,6 +57,7 @@ int	parse_digits(char *line, int *n)
 */
 int	check_play(t_filler *f)
 {
+	get_next_line(STDIN_FILENO, &f->line);
 	f->just_played = *(ft_strchr(f->line, '(') + 1);
 	set_next_turn(f);
 	ft_strdel(&f->line);
@@ -65,7 +66,6 @@ int	check_play(t_filler *f)
 	{
 		f->oponent_quit = 1;
 		return (0);
-		// handle_piece(f);
 	}
 	else if (ft_strstr(f->line, END_GAME_LN))
 	{
@@ -73,10 +73,7 @@ int	check_play(t_filler *f)
 		return (-1);
 	}
 	else if (ft_strstr(f->line, BOARD_SIZE_LN))
-	{
 		ft_strdel(&f->line);
-		skip_lines(&f->line, 1);
-	}
 	return (1);
 }
 
