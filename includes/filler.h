@@ -6,7 +6,7 @@
 /*   By: rodrodri <rodrodri@student.hive.fi >       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/02/03 16:24:50 by rodrodri          #+#    #+#             */
-/*   Updated: 2022/02/12 12:58:17 by rodrodri         ###   ########.fr       */
+/*   Updated: 2022/02/12 17:56:17 by rodrodri         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -42,6 +42,8 @@ typedef struct s_filler
 	int		b_cols;
 	int		p_rows;
 	int		p_cols;
+	int		p_width;
+	int		p_height;
 	char	just_played;
 	char	next_turn;
 	_Bool	oponent_quit;

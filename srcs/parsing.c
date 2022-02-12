@@ -6,7 +6,7 @@
 /*   By: rodrodri <rodrodri@student.hive.fi >       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/02/06 12:03:50 by rodrodri          #+#    #+#             */
-/*   Updated: 2022/02/12 13:27:29 by rodrodri         ###   ########.fr       */
+/*   Updated: 2022/02/12 17:58:14 by rodrodri         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,6 +14,7 @@
 #include "filler.h"
 
 static void	parse_piece(t_filler *f);
+static int	measure_piece(t_filler *f);
 
 /*
 **	It finds the line starting with '$$$ exec p1', and checks if it
@@ -82,6 +83,8 @@ int	parse_board(t_filler *f)
 */
 int	handle_piece(t_filler *f, t_heatmap *hm)
 {
+	int	ret;
+
 	get_size(&f->line, &f->p_rows, &f->p_cols);
 	// ft_printf("Piece detected: %dx%d\n", f->p_rows, f->p_cols);
 	if (f->our_playa == f->next_turn || f->oponent_quit)
@@ -90,18 +93,24 @@ int	handle_piece(t_filler *f, t_heatmap *hm)
 		if (!f->piece)
 			return (-1);
 		parse_piece(f);
+		measure_piece(f);
+		ft_printf("Piece has width %d and height %d\n", f->p_width, f->p_height);
 		print_char2darr(f->piece); //<-- delete me!!
-		place_piece(f, hm); // this should be done here (print size for now)
+		if (place_piece(f, hm))
+			ret = 1;
+		else
+			ret = 0;
 		free_char_2darr(f->piece);
 		free(f->piece);
 	}
 	else
 	{
 		if (skip_lines(&f->line, f->p_rows) <= 0)
-			return (-1);// in case we get to == end?
+			ret = 0; // in case we get to end of output (malformed VM's output)
+		ret = 1;
 		ft_printf("Skipped other guy's piece (%d %d)\n", f->p_rows, f->p_cols);
 	}
-	return (0);
+	return (ret);
 }
 
 static void	parse_piece(t_filler *f)
@@ -116,4 +125,46 @@ static void	parse_piece(t_filler *f)
 		ft_strdel(&f->line);
 		i++;
 	}
+}
+
+static int	measure_piece(t_filler *f)
+{
+	int	i;
+	int	j;
+
+	f->p_height = f->p_rows;
+	i = f->p_rows - 1;
+	while (i > 0)
+	{
+		j = 0;
+		while (j < f->p_cols)
+		{
+			if (f->piece[i][j] != '.')
+				break ;
+			j++;
+		}
+		if (j == f->p_cols)
+			f->p_height--;
+		else
+			break ;
+		i--;
+	}
+	f->p_width = f->p_cols;
+	j = f->p_cols - 1;
+	while (j > 0)
+	{
+		i = 0;
+		while (i < f->p_rows)
+		{
+			if (f->piece[i][j] != '.')
+				break ;
+			i++;
+		}
+		if (i == f->p_rows)
+			f->p_width--;
+		else
+			break ;
+		j--;
+	}
+	return (0);
 }

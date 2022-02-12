@@ -6,7 +6,7 @@
 /*   By: rodrodri <rodrodri@student.hive.fi >       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/02/06 12:03:50 by rodrodri          #+#    #+#             */
-/*   Updated: 2022/02/12 13:13:43 by rodrodri         ###   ########.fr       */
+/*   Updated: 2022/02/12 17:46:59 by rodrodri         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,6 +16,12 @@
 static void	set_next_turn(t_filler *f);
 static int	parse_digits(char *line, int *n);
 
+/*
+**	It passes its 'str' argument (the address of a string), to the 
+**	'parse_digits' function, which returns an 'int' value that will
+**	be assigned to the 'rows' and 'cols' parameters.
+**	It DELETES the string at the end, and returns '1'.
+*/
 int	get_size(char **ln, int *rows, int *cols)
 {
 	int		advance;
@@ -27,8 +33,8 @@ int	get_size(char **ln, int *rows, int *cols)
 }
 
 /*
-**	It parses its 'str' argument (the address of a string), searching for
-**	digits, which are stored in an 'int' variable returned at the end.
+**	It parses its 'str' argument, searching for digits, which
+**	are stored in an 'int' variable returned at the end.
 */
 int	parse_digits(char *line, int *n)
 {
@@ -62,7 +68,7 @@ int	check_play(t_filler *f)
 	set_next_turn(f);
 	ft_strdel(&f->line);
 	get_next_line(STDIN_FILENO, &f->line);
-	if (ft_strstr(f->line, PIECE_SIZE_LN))
+	if (ft_strstr(f->line, PIECE_SIZE_LN))// checks it was opponent's turn!!
 	{
 		f->oponent_quit = 1;
 		return (0);

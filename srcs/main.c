@@ -6,7 +6,7 @@
 /*   By: rodrodri <rodrodri@student.hive.fi >       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/02/03 16:22:48 by rodrodri          #+#    #+#             */
-/*   Updated: 2022/02/12 13:09:21 by rodrodri         ###   ########.fr       */
+/*   Updated: 2022/02/12 17:41:17 by rodrodri         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,11 +31,12 @@ int	main(void)
 			parse_board(&f);
 			make_filler_heatmap(&f, &hm);
 			print_char2darr(f.board); // <=== delete me!!!!!
-			// print_filler_heatmap(&hm); // <=== delete me!!!!!
+			print_filler_heatmap(&hm); // <=== delete me!!!!!
 		}
 		else if (ft_strstr(f.line, PIECE_SIZE_LN))
 		{
-			handle_piece(&f, &hm);
+			if (!handle_piece(&f, &hm))
+				break ;
 			ret = check_play(&f);// this puts another line in the heap!!
 			if (ret < 0)
 			{
@@ -43,9 +44,9 @@ int	main(void)
 				break ;
 			}
 			else if (ret > 0)
-				ft_strdel(&f.line);// and here (another Plateau)
-			else		// if it's zero, our opponent quit!
-				handle_piece(&f, &hm);// f.line has the Piece SIZE
+				ft_strdel(&f.line);// or here (another Plateau)
+			else if (!handle_piece(&f, &hm))
+				break ;
 		}
 		else
 			ft_strdel(&f.line);
