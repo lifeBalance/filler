@@ -6,7 +6,7 @@
 /*   By: rodrodri <rodrodri@student.hive.fi >       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/02/06 12:03:50 by rodrodri          #+#    #+#             */
-/*   Updated: 2022/02/12 17:58:14 by rodrodri         ###   ########.fr       */
+/*   Updated: 2022/02/13 14:49:53 by rodrodri         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,14 +24,16 @@ static int	measure_piece(t_filler *f);
 */
 int	get_our_playa(t_filler *f)
 {
-	int	ret;
+	int		ret;
+	char	*playa_num;
 
 	ret = find_line(&f->line, WHOS_PLAYA1_LN);
 	if (ret < 0)
 		return (-1);
 	else if (ret == 0)
 		return (0);
-	if (ft_strstr(f->line, AUTHOR))
+	playa_num = ft_strchr(f->line, 'p') + 1;
+	if (ft_strncmp(playa_num, "1", 1) == 0 && ft_strstr(f->line, AUTHOR))
 	{
 		f->our_playa = PLAYA1;
 		f->other_playa = PLAYA2;
@@ -86,7 +88,7 @@ int	handle_piece(t_filler *f, t_heatmap *hm)
 	int	ret;
 
 	get_size(&f->line, &f->p_rows, &f->p_cols);
-	// ft_printf("Piece detected: %dx%d\n", f->p_rows, f->p_cols);
+	// ft_printf("%dx%d piece detected!\n", f->p_rows, f->p_cols);
 	if (f->our_playa == f->next_turn || f->oponent_quit)
 	{
 		f->piece = alloc_char_2darr(f->p_rows, f->p_cols);
@@ -94,8 +96,8 @@ int	handle_piece(t_filler *f, t_heatmap *hm)
 			return (-1);
 		parse_piece(f);
 		measure_piece(f);
-		ft_printf("Piece has width %d and height %d\n", f->p_width, f->p_height);
-		print_char2darr(f->piece); //<-- delete me!!
+		// ft_printf("It's for us! (width %d, height %d\n", f->p_width, f->p_height);
+		// print_char2darr(f->piece); //<-- delete me!!
 		if (place_piece(f, hm))
 			ret = 1;
 		else
@@ -108,7 +110,7 @@ int	handle_piece(t_filler *f, t_heatmap *hm)
 		if (skip_lines(&f->line, f->p_rows) <= 0)
 			ret = 0; // in case we get to end of output (malformed VM's output)
 		ret = 1;
-		ft_printf("Skipped other guy's piece (%d %d)\n", f->p_rows, f->p_cols);
+		// ft_printf("Skipped other guy's piece (%d %d)\n", f->p_rows, f->p_cols);
 	}
 	return (ret);
 }

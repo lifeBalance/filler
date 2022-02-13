@@ -6,7 +6,7 @@
 /*   By: rodrodri <rodrodri@student.hive.fi >       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/02/06 12:03:50 by rodrodri          #+#    #+#             */
-/*   Updated: 2022/02/12 17:46:59 by rodrodri         ###   ########.fr       */
+/*   Updated: 2022/02/13 12:45:32 by rodrodri         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -63,12 +63,18 @@ int	parse_digits(char *line, int *n)
 */
 int	check_play(t_filler *f)
 {
+	int	zero_play;
+
+	zero_play = 0;
 	get_next_line(STDIN_FILENO, &f->line);
 	f->just_played = *(ft_strchr(f->line, '(') + 1);
+	if (ft_strstr(f->line, "[0, 0]"))
+		zero_play = 1;
 	set_next_turn(f);
 	ft_strdel(&f->line);
 	get_next_line(STDIN_FILENO, &f->line);
-	if (ft_strstr(f->line, PIECE_SIZE_LN))// checks it was opponent's turn!!
+	if (ft_strstr(f->line, PIECE_SIZE_LN) && zero_play && \
+		f->just_played == f->other_playa)// checks it was opponent's turn!!
 	{
 		f->oponent_quit = 1;
 		return (0);

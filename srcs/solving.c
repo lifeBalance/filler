@@ -6,7 +6,7 @@
 /*   By: rodrodri <rodrodri@student.hive.fi >       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/02/06 12:03:50 by rodrodri          #+#    #+#             */
-/*   Updated: 2022/02/12 17:58:45 by rodrodri         ###   ########.fr       */
+/*   Updated: 2022/02/13 13:51:29 by rodrodri         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,7 +14,9 @@
 #include "filler.h"
 #include "heatmap.h"
 
-static void	init_min(int min[4]);
+static void	init_pos(int min[4]);
+static int	find_position(t_filler *f, t_heatmap *hm, int min[4]);
+static int	check_collisions(t_filler *f, int row, int col);
 
 int	make_filler_heatmap(t_filler *f, t_heatmap *hm)
 {
@@ -37,28 +39,32 @@ int	make_filler_heatmap(t_filler *f, t_heatmap *hm)
 	return (0);
 }
 
+/*
+**	It declares an array (pos) of 4 integers:
+**	- index 0 for the 'set' value
+**	- index 1 for the heatmap value at that position (row, col)
+**	- index 2 for the row itself.
+**	- index 3 for the column.
+**	It invokes a function to do the job of finding the position and returns:
+**	- zero if there's no suitable position for the piece.
+**	- one, otherwise.
+**	It also prints the position to standard output.
+*/
 int	place_piece(t_filler *f, t_heatmap *hm)
 {
-	// int	height;
-	// int	width;
-	int	min[4]; // idx 0 for the 'set' value, 1 for the value itself, 2 for the row, 3 for the column.
+	int	pos[4];
 
-	init_min(min);
-	// measure_piece(f, &height, &width);
-	// ft_printf("Piece has width %d and height %d\n", width, height);
-	(void)hm;
-	(void)f;
-	return (1);
-	// if (find_position(f, hm))
-	// {
-	// 	// ft_printf("%d %d\n", f->);
-	// 	return (1);
-	// }
-	// else
-	// 	return (-1);
-	// When the loop ends, we check if there's a position set,
-	// and print the coordinates in min[1] and min[2]; '0 0\n' otherwise (in
-	// that case we'll exit).
+	init_pos(pos);
+	if (find_position(f, hm, pos))
+	{
+		ft_printf("%d %d\n", pos[2], pos[3]);
+		return (1);
+	}
+	else
+	{
+		ft_printf("0 0\n");
+		return (-1);
+	}
 	return (0);
 }
 
@@ -67,36 +73,37 @@ int	place_piece(t_filler *f, t_heatmap *hm)
 **	piece can be placed, 0 otherwise.
 **	The heatmap must be traversed simultaneously to find the most
 **	favourable position (smaller value greater or equal to 1)
-**	that we'll keep in 'min[0]'(for now).
+**	that we'll keep in 'pos[0]'(for now).
 **	Returns 1 if the position was found, -1 if it didn't.
 */
-// static int	find_position(t_filler *f, t_heatmap *hm, int min[4])
-// {
-// 	int	i;
-// 	int	j;
+static int	find_position(t_filler *f, t_heatmap *hm, int pos[4])
+{
+	int	i;
+	int	j;
 
-// 	i = 0;
-// 	while (i < f->p_rows)
-// 	{
-// 		j = 0;
-// 		while (i < f->p_cols)
-// 		{
-// 			if (check_collisions(f, i, j) && hm->map[i][j] <= min[1])
-// 			{
-// 				min[0] = 1;
-// 				min[1] = hm->map[i][j];
-// 				min[2] = i;
-// 				min[3] = j;
-// 			}
-// 			j++;
-// 		}
-// 		i++;
-// 	}
-// 	if (min[0])
-// 		return (1);
-// 	else
-// 		return (-1);
-// }
+	i = 0;
+	while (i < f->b_rows)
+	{
+		j = 0;
+		while (j < f->b_cols)
+		{
+			if (check_collisions(f, i, j) && \
+				(hm->map[i][j] <= pos[1] || pos[0] == 0))
+			{
+				pos[0] = 1;
+				pos[1] = hm->map[i][j];
+				pos[2] = i;
+				pos[3] = j;
+			}
+			j++;
+		}
+		i++;
+	}
+	if (pos[0])
+		return (1);
+	else
+		return (-1);
+}
 
 /*
 **	Traverses simultaneously both the piece and the board checking for
@@ -105,34 +112,43 @@ int	place_piece(t_filler *f, t_heatmap *hm)
 **	 2. There must be no collisions with the borders of the board.
 **	Returns 1 if the piece can be placed, 0 otherwise.
 */
-// static int	check_collisions(t_filler *f, int row, int col)
-// {
-// 	int	i;
-// 	int	j;
-// 	int	single_collision;
-	
-// 	single_collision = 0;
-// 	i = 0;
-// 	while (i < f->p_rows)
-// 	{
-// 		j = 0;
-// 		while (i < f->p_cols)
-// 		{
-// 			if (i + p_height > )
-// 			j++;
-// 		}
-// 		i++;
-// 	}
-// }
-
-static void	init_min(int min[4])
+static int	check_collisions(t_filler *f, int row, int col)
 {
-	min[0] = 0;
-	min[1] = 0;
-	min[2] = 0;
-	min[3] = 0;
+	int	i;
+	int	j;
+	int	single_collision;
+	
+	if (row + f->p_height > f->b_rows || col + f->p_width > f->b_cols)
+		return (0);
+	single_collision = 0;
+	i = 0;
+	while (i < f->p_height)
+	{
+		j = 0;
+		while (j < f->p_width && single_collision <= 1)
+		{
+			if (f->piece[i][j] == '*' && \
+				ft_toupper(f->board[i + row][j + col]) == f->our_playa)
+				single_collision++;
+			else if (f->piece[i][j] == '*' && \
+				ft_toupper(f->board[i + row][j + col]) == f->other_playa)
+				return (0);
+			j++;
+		}
+		i++;
+	}
+	if (single_collision == 1)
+		return (1);
+	return (0);
 }
 
+static void	init_pos(int pos[4])
+{
+	pos[0] = 0;
+	pos[1] = 0;
+	pos[2] = 0;
+	pos[3] = 0;
+}
 
 void	print_filler_heatmap(t_heatmap *hm)
 {

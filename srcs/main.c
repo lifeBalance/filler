@@ -6,7 +6,7 @@
 /*   By: rodrodri <rodrodri@student.hive.fi >       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/02/03 16:22:48 by rodrodri          #+#    #+#             */
-/*   Updated: 2022/02/12 17:41:17 by rodrodri         ###   ########.fr       */
+/*   Updated: 2022/02/13 14:50:28 by rodrodri         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,14 +24,15 @@ int	main(void)
 
 	if (init_filler(&f, &hm) < 0)
 		return (-1);
+	// ft_printf("We're |%c|\n", f.our_playa);
 	while (get_next_line(STDIN_FILENO, &f.line) > 0)
 	{
 		if (ft_strstr(f.line, FIRST_BOARD_LN))
 		{
 			parse_board(&f);
 			make_filler_heatmap(&f, &hm);
-			print_char2darr(f.board); // <=== delete me!!!!!
-			print_filler_heatmap(&hm); // <=== delete me!!!!!
+			// print_char2darr(f.board); // <=== delete me!!!!!
+			// print_filler_heatmap(&hm); // <=== delete me!!!!!
 		}
 		else if (ft_strstr(f.line, PIECE_SIZE_LN))
 		{
