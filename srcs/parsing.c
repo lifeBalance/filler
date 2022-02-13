@@ -6,14 +6,14 @@
 /*   By: rodrodri <rodrodri@student.hive.fi >       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/02/06 12:03:50 by rodrodri          #+#    #+#             */
-/*   Updated: 2022/02/14 00:01:00 by rodrodri         ###   ########.fr       */
+/*   Updated: 2022/02/14 00:15:19 by rodrodri         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "libft.h"
 #include "filler.h"
 
-static int	parse_digits(char *line, int *n);
+// static int	parse_digits(char *line, int *n);
 
 /*
 **	It finds the line starting with '$$$ exec p1', and checks if it
@@ -117,29 +117,14 @@ int	handle_piece(t_filler *f, t_heatmap *hm)
 */
 void	get_size(char **ln, int *rows, int *cols)
 {
-	int		advance;
+	char	*ln_cpy;
 
-	advance = parse_digits(*ln, rows);
-	parse_digits(*ln + advance, cols);
+	ln_cpy = *ln;
+	while (!(ft_isdigit(*ln_cpy)))
+		ln_cpy++;
+	*rows = ft_atoi(ln_cpy);
+	while (!(ft_isdigit(*ln_cpy)))
+		ln_cpy++;
+	*cols = ft_atoi(ln_cpy);
 	ft_strdel(ln);
-}
-
-/*
-**	It parses its 'str' argument, searching for digits, which
-**	are stored in an 'int' variable returned at the end.
-*/
-int	parse_digits(char *line, int *n)
-{
-	int	i;
-
-	i = 0;
-	while (!ft_isdigit(line[i]))
-		i++;
-	*n = 0;
-	while (line[i] && ft_isdigit(line[i]))
-	{
-		*n = *n * 10 + (line[i] - '0');
-		i++;
-	}
-	return (i);
 }
