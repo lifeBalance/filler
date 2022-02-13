@@ -6,7 +6,7 @@
 /*   By: rodrodri <rodrodri@student.hive.fi >       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/02/06 12:07:35 by rodrodri          #+#    #+#             */
-/*   Updated: 2022/02/11 16:05:42 by rodrodri         ###   ########.fr       */
+/*   Updated: 2022/02/13 23:34:36 by rodrodri         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,58 +16,25 @@
 /*
 **	It fast-forwards to the line which contains its 'str' argument.
 **	Return values:
-**		- If the line is found, 1.
-**		- If the line is NOT found, 0.
+**		- If the line is found, 0.
+**		- If the line is NOT found, 1.
 */
 int	find_line(char **ln, const char *str)
 {
 	int		ret;
 
-	if (!(*ln))
-		ft_strdel(ln);
 	ret = get_next_line(STDIN_FILENO, ln);
 	while (ret > 0)
 	{
 		if (ft_strstr(*ln, str))
-			return (1);
+			return (0);
 		else
 		{
 			ft_strdel(ln);
 			ret = get_next_line(STDIN_FILENO, ln);
 		}
 	}
-	return (0);
-}
-
-/*
-**	It skips a given number of lines, freeing allocated lines along the way.
-*/
-int	skip_lines(char **str, int n)
-{
-	if (!(*str))
-		ft_strdel(str);
-	while (n--)
-	{
-		if (get_next_line(STDIN_FILENO, str) <= 0)
-			return (-1);
-		ft_strdel(str);
-	}
-	return (1);
-}
-
-/*
-**	It prints the token and releases it when done. It doesn't return anything.
-*/
-void	print_char2darr(char **str)
-{
-	int		i;
-
-	i = 0;
-	while (str[i])
-	{
-		ft_printf("%s\n", str[i]);
-		i++;
-	}
+	return (-1);
 }
 
 char	**alloc_char_2darr(int rows, int cols)
@@ -105,3 +72,20 @@ void	free_char_2darr(char **arr)
 		i++;
 	}
 }
+
+
+/*
+**	It skips a given number of lines, freeing allocated lines along the way.
+*/
+// int	skip_lines(char **str, int n)
+// {
+// 	if (!(*str))
+// 		ft_strdel(str);
+// 	while (n--)
+// 	{
+// 		if (get_next_line(STDIN_FILENO, str) <= 0)
+// 			return (-1);
+// 		ft_strdel(str);
+// 	}
+// 	return (1);
+// }

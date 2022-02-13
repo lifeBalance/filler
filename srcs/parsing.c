@@ -6,15 +6,14 @@
 /*   By: rodrodri <rodrodri@student.hive.fi >       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/02/06 12:03:50 by rodrodri          #+#    #+#             */
-/*   Updated: 2022/02/13 14:49:53 by rodrodri         ###   ########.fr       */
+/*   Updated: 2022/02/14 00:01:00 by rodrodri         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "libft.h"
 #include "filler.h"
 
-static void	parse_piece(t_filler *f);
-static int	measure_piece(t_filler *f);
+static int	parse_digits(char *line, int *n);
 
 /*
 **	It finds the line starting with '$$$ exec p1', and checks if it
@@ -22,18 +21,14 @@ static int	measure_piece(t_filler *f);
 **	(It could be refactored to also extract both player names and store them
 **	in dedicated fields of the t_filler structure; can be used for visualize).
 */
-int	get_our_playa(t_filler *f)
+int	parse_playas(t_filler *f)
 {
-	int		ret;
 	char	*playa_num;
 
-	ret = find_line(&f->line, WHOS_PLAYA1_LN);
-	if (ret < 0)
+	if (find_line(&f->line, PLAYA_NUM_LN) < 0)
 		return (-1);
-	else if (ret == 0)
-		return (0);
 	playa_num = ft_strchr(f->line, 'p') + 1;
-	if (ft_strncmp(playa_num, "1", 1) == 0 && ft_strstr(f->line, AUTHOR))
+	if (ft_strncmp(playa_num, "1", 1) == 0)
 	{
 		f->our_playa = PLAYA1;
 		f->other_playa = PLAYA2;
@@ -44,7 +39,7 @@ int	get_our_playa(t_filler *f)
 		f->other_playa = PLAYA1;
 	}
 	ft_strdel(&f->line);
-	return (1);
+	return (0);
 }
 
 /*
@@ -56,12 +51,15 @@ int	get_our_playa(t_filler *f)
 */
 int	parse_board(t_filler *f)
 {
-	int		i;
-	int		offset;
+	int	i;
+	int	offset;
 
+	if (find_line(&f->line, FIRST_BOARD_LN) < 0)
+		return (-1);
 	i = 0;
 	while (i < f->b_rows)
 	{
+		ft_strclr(f->board[i]);
 		if (i > 0)
 			get_next_line(STDIN_FILENO, &f->line);
 		offset = (ft_strchr(f->line, ' ') + 1) - f->line;
@@ -86,39 +84,14 @@ int	parse_board(t_filler *f)
 int	handle_piece(t_filler *f, t_heatmap *hm)
 {
 	int	ret;
+	int	i;
 
+	if (find_line(&f->line, PIECE_SIZE_LN) < 0)
+		return (-1);
 	get_size(&f->line, &f->p_rows, &f->p_cols);
-	// ft_printf("%dx%d piece detected!\n", f->p_rows, f->p_cols);
-	if (f->our_playa == f->next_turn || f->oponent_quit)
-	{
-		f->piece = alloc_char_2darr(f->p_rows, f->p_cols);
-		if (!f->piece)
-			return (-1);
-		parse_piece(f);
-		measure_piece(f);
-		// ft_printf("It's for us! (width %d, height %d\n", f->p_width, f->p_height);
-		// print_char2darr(f->piece); //<-- delete me!!
-		if (place_piece(f, hm))
-			ret = 1;
-		else
-			ret = 0;
-		free_char_2darr(f->piece);
-		free(f->piece);
-	}
-	else
-	{
-		if (skip_lines(&f->line, f->p_rows) <= 0)
-			ret = 0; // in case we get to end of output (malformed VM's output)
-		ret = 1;
-		// ft_printf("Skipped other guy's piece (%d %d)\n", f->p_rows, f->p_cols);
-	}
-	return (ret);
-}
-
-static void	parse_piece(t_filler *f)
-{
-	int		i;
-
+	f->piece = alloc_char_2darr(f->p_rows, f->p_cols);
+	if (!f->piece)
+		return (-1);
 	i = 0;
 	while (i < f->p_rows)
 	{
@@ -127,46 +100,46 @@ static void	parse_piece(t_filler *f)
 		ft_strdel(&f->line);
 		i++;
 	}
+	if (place_piece(f, hm) < 0)
+		ret = -1;
+	else
+		ret = 0;
+	free_char_2darr(f->piece);
+	free(f->piece);
+	return (ret);
 }
 
-static int	measure_piece(t_filler *f)
+/*
+**	It passes its 'str' argument (the address of a string), to the 
+**	'parse_digits' function, which returns an 'int' value that will
+**	be assigned to the 'rows' and 'cols' parameters.
+**	It DELETES the string at the end, and returns '1'.
+*/
+void	get_size(char **ln, int *rows, int *cols)
+{
+	int		advance;
+
+	advance = parse_digits(*ln, rows);
+	parse_digits(*ln + advance, cols);
+	ft_strdel(ln);
+}
+
+/*
+**	It parses its 'str' argument, searching for digits, which
+**	are stored in an 'int' variable returned at the end.
+*/
+int	parse_digits(char *line, int *n)
 {
 	int	i;
-	int	j;
 
-	f->p_height = f->p_rows;
-	i = f->p_rows - 1;
-	while (i > 0)
+	i = 0;
+	while (!ft_isdigit(line[i]))
+		i++;
+	*n = 0;
+	while (line[i] && ft_isdigit(line[i]))
 	{
-		j = 0;
-		while (j < f->p_cols)
-		{
-			if (f->piece[i][j] != '.')
-				break ;
-			j++;
-		}
-		if (j == f->p_cols)
-			f->p_height--;
-		else
-			break ;
-		i--;
+		*n = *n * 10 + (line[i] - '0');
+		i++;
 	}
-	f->p_width = f->p_cols;
-	j = f->p_cols - 1;
-	while (j > 0)
-	{
-		i = 0;
-		while (i < f->p_rows)
-		{
-			if (f->piece[i][j] != '.')
-				break ;
-			i++;
-		}
-		if (i == f->p_rows)
-			f->p_width--;
-		else
-			break ;
-		j--;
-	}
-	return (0);
+	return (i);
 }

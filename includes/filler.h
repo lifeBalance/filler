@@ -6,7 +6,7 @@
 /*   By: rodrodri <rodrodri@student.hive.fi >       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/02/03 16:24:50 by rodrodri          #+#    #+#             */
-/*   Updated: 2022/02/12 17:56:17 by rodrodri         ###   ########.fr       */
+/*   Updated: 2022/02/14 00:08:23 by rodrodri         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,7 +18,7 @@
 # define BOARD_SIZE_LN	"Plateau"
 # define PIECE_SIZE_LN	"Piece"
 # define FIRST_BOARD_LN	"000"
-# define WHOS_PLAYA1_LN	"$$$ exec p1"
+# define PLAYA_NUM_LN	"$$$ exec p"
 # define LAST_MOVE_LN	"<got"
 # define END_GAME_LN	"=="
 # define PLAYA1			'O'
@@ -42,22 +42,21 @@ typedef struct s_filler
 	int		b_cols;
 	int		p_rows;
 	int		p_cols;
-	int		p_width;
-	int		p_height;
-	char	just_played;
-	char	next_turn;
-	_Bool	oponent_quit;
+	// int		p_width;
+	// int		p_height;
+	// char	just_played;
+	// char	next_turn;
+	// _Bool	oponent_quit;
 }	t_filler;
 
 /*
 **	Prototypes
 */
-int		get_our_playa(t_filler *f);
-int		get_size(char **line, int *rows, int *cols);
+int		parse_playas(t_filler *f);
+void	get_size(char **line, int *rows, int *cols);
 int		parse_board(t_filler *f);
 int		handle_piece(t_filler *f, t_heatmap *hm);
 int		place_piece(t_filler *f, t_heatmap *hm);
-int		check_play(t_filler *f);
 
 char	**alloc_char_2darr(int rows, int cols);
 void	free_char_2darr(char **arr);

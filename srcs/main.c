@@ -6,7 +6,7 @@
 /*   By: rodrodri <rodrodri@student.hive.fi >       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/02/03 16:22:48 by rodrodri          #+#    #+#             */
-/*   Updated: 2022/02/13 14:50:28 by rodrodri         ###   ########.fr       */
+/*   Updated: 2022/02/13 23:55:18 by rodrodri         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,57 +21,48 @@ int	main(void)
 	t_filler	f;
 	t_heatmap	hm;
 	int			ret;
+	int			i;
 
+	i = 0;
+	ret = 0;
 	if (init_filler(&f, &hm) < 0)
 		return (-1);
-	// ft_printf("We're |%c|\n", f.our_playa);
-	while (get_next_line(STDIN_FILENO, &f.line) > 0)
+	if (parse_board(&f) < 0)
+		return (-1);
+	make_filler_heatmap(&f, &hm);
+	while (1)
 	{
-		if (ft_strstr(f.line, FIRST_BOARD_LN))
+		if (i > 0 && parse_board(&f) < 0)
 		{
-			parse_board(&f);
-			make_filler_heatmap(&f, &hm);
-			// print_char2darr(f.board); // <=== delete me!!!!!
-			// print_filler_heatmap(&hm); // <=== delete me!!!!!
+			ret = -1;
+			break ;
 		}
-		else if (ft_strstr(f.line, PIECE_SIZE_LN))
+		make_filler_heatmap(&f, &hm);
+		if (handle_piece(&f, &hm) < 0)
 		{
-			if (!handle_piece(&f, &hm))
-				break ;
-			ret = check_play(&f);// this puts another line in the heap!!
-			if (ret < 0)
-			{
-				ft_strdel(&f.line);// which we delete here ('== fin')
-				break ;
-			}
-			else if (ret > 0)
-				ft_strdel(&f.line);// or here (another Plateau)
-			else if (!handle_piece(&f, &hm))
-				break ;
+			ret = -1;
+			break ;
 		}
-		else
-			ft_strdel(&f.line);
+		i++;
 	}
 	free_char_2darr(f.board);
 	free_int_2darr(hm.map);
 	system("leaks rodrodri.filler");
-	return (0);
+	return (ret);
 }
 
 static int	init_filler(t_filler *f, t_heatmap *hm)
 {
 	ft_memset(f, 0, sizeof(*f));
-	if (get_our_playa(f) <= 0)
+	if (parse_playas(f) < 0)
 		return (-1);
-	if (find_line(&f->line, BOARD_SIZE_LN) <= 0)
+	if (find_line(&f->line, BOARD_SIZE_LN) < 0)
 		return (-1);
-	if (get_size(&f->line, &f->b_rows, &f->b_cols) < 0)
-		return (-1);
+	get_size(&f->line, &f->b_rows, &f->b_cols);
 	f->board = alloc_char_2darr(f->b_rows, f->b_cols);
 	if (!f->board)
 		return (-1);
 	if (hm_init(hm, f->b_rows, f->b_cols, 0) < 0)
 		return (-1);
-	f->next_turn = PLAYA1;
 	return (0);
 }
