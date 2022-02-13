@@ -6,7 +6,7 @@
 /*   By: rodrodri <rodrodri@student.hive.fi >       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/02/06 12:03:50 by rodrodri          #+#    #+#             */
-/*   Updated: 2022/02/13 13:51:29 by rodrodri         ###   ########.fr       */
+/*   Updated: 2022/02/13 16:32:29 by rodrodri         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,7 +29,7 @@ int	make_filler_heatmap(t_filler *f, t_heatmap *hm)
 		j = 0;
 		while (j < f->b_cols)
 		{
-			if (f->board[i][j] == f->other_playa)
+			if (ft_toupper(f->board[i][j]) == f->other_playa)
 				hm->map[i][j] = -1;
 			j++;
 		}
