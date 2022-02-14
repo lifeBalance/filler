@@ -6,7 +6,7 @@
 /*   By: rodrodri <rodrodri@student.hive.fi >       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/02/06 12:03:50 by rodrodri          #+#    #+#             */
-/*   Updated: 2022/02/13 23:35:50 by rodrodri         ###   ########.fr       */
+/*   Updated: 2022/02/14 00:37:47 by rodrodri         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -48,47 +48,47 @@ void	print_filler_heatmap(t_heatmap *hm)
 	}
 }
 
-static int	measure_piece(t_filler *f)
-{
-	int	i;
-	int	j;
+// static int	measure_piece(t_filler *f)
+// {
+// 	int	i;
+// 	int	j;
 
-	f->p_height = f->p_rows;
-	i = f->p_rows - 1;
-	while (i > 0)
-	{
-		j = 0;
-		while (j < f->p_cols)
-		{
-			if (f->piece[i][j] != '.')
-				break ;
-			j++;
-		}
-		if (j == f->p_cols)
-			f->p_height--;
-		else
-			break ;
-		i--;
-	}
-	f->p_width = f->p_cols;
-	j = f->p_cols - 1;
-	while (j > 0)
-	{
-		i = 0;
-		while (i < f->p_rows)
-		{
-			if (f->piece[i][j] != '.')
-				break ;
-			i++;
-		}
-		if (i == f->p_rows)
-			f->p_width--;
-		else
-			break ;
-		j--;
-	}
-	return (0);
-}
+// 	f->p_height = f->p_rows;
+// 	i = f->p_rows - 1;
+// 	while (i > 0)
+// 	{
+// 		j = 0;
+// 		while (j < f->p_cols)
+// 		{
+// 			if (f->piece[i][j] != '.')
+// 				break ;
+// 			j++;
+// 		}
+// 		if (j == f->p_cols)
+// 			f->p_height--;
+// 		else
+// 			break ;
+// 		i--;
+// 	}
+// 	f->p_width = f->p_cols;
+// 	j = f->p_cols - 1;
+// 	while (j > 0)
+// 	{
+// 		i = 0;
+// 		while (i < f->p_rows)
+// 		{
+// 			if (f->piece[i][j] != '.')
+// 				break ;
+// 			i++;
+// 		}
+// 		if (i == f->p_rows)
+// 			f->p_width--;
+// 		else
+// 			break ;
+// 		j--;
+// 	}
+// 	return (0);
+// }
 
 /*
 **	It reads the line with the last play, checking if its value is "[0, 0]"

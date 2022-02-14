@@ -6,7 +6,7 @@
 /*   By: rodrodri <rodrodri@student.hive.fi >       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/02/03 16:24:50 by rodrodri          #+#    #+#             */
-/*   Updated: 2022/02/14 00:08:23 by rodrodri         ###   ########.fr       */
+/*   Updated: 2022/02/14 00:18:29 by rodrodri         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -54,7 +54,7 @@ typedef struct s_filler
 */
 int		parse_playas(t_filler *f);
 void	get_size(char **line, int *rows, int *cols);
-int		parse_board(t_filler *f);
+int		parse_board(t_filler *f, t_heatmap *hm);
 int		handle_piece(t_filler *f, t_heatmap *hm);
 int		place_piece(t_filler *f, t_heatmap *hm);
 

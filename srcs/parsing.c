@@ -6,18 +6,18 @@
 /*   By: rodrodri <rodrodri@student.hive.fi >       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/02/06 12:03:50 by rodrodri          #+#    #+#             */
-/*   Updated: 2022/02/14 00:15:19 by rodrodri         ###   ########.fr       */
+/*   Updated: 2022/02/14 02:47:09 by rodrodri         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "libft.h"
 #include "filler.h"
 
-// static int	parse_digits(char *line, int *n);
+static int	parse_digits(char *line, int *n);
 
 /*
-**	It finds the line starting with '$$$ exec p1', and checks if it
-**	contains our player name. If so, we're player 1, otherwise we're player 2.
+**	It finds the line starting with '$$$ exec p', and checks if it
+**	contains the number 1. If so, we're player 1, otherwise we're player 2.
 **	(It could be refactored to also extract both player names and store them
 **	in dedicated fields of the t_filler structure; can be used for visualize).
 */
@@ -39,6 +39,7 @@ int	parse_playas(t_filler *f)
 		f->other_playa = PLAYA1;
 	}
 	ft_strdel(&f->line);
+	// ft_printf("our playa: %c other playa: %c\n", f->our_playa, f->other_playa);
 	return (0);
 }
 
@@ -49,7 +50,7 @@ int	parse_playas(t_filler *f)
 **	contains the number of the row.
 **	It stops reading lines at the very last line of the board.
 */
-int	parse_board(t_filler *f)
+int	parse_board(t_filler *f, t_heatmap *hm)
 {
 	int	i;
 	int	offset;
@@ -59,7 +60,7 @@ int	parse_board(t_filler *f)
 	i = 0;
 	while (i < f->b_rows)
 	{
-		ft_strclr(f->board[i]);
+		// ft_strclr(f->board[i]);
 		if (i > 0)
 			get_next_line(STDIN_FILENO, &f->line);
 		offset = (ft_strchr(f->line, ' ') + 1) - f->line;
@@ -67,6 +68,9 @@ int	parse_board(t_filler *f)
 		ft_strdel(&f->line);
 		i++;
 	}
+	// print_char2darr(f->board);
+	make_filler_heatmap(f, hm);
+	// print_filler_heatmap(hm);
 	return (0);
 }
 
@@ -92,6 +96,7 @@ int	handle_piece(t_filler *f, t_heatmap *hm)
 	f->piece = alloc_char_2darr(f->p_rows, f->p_cols);
 	if (!f->piece)
 		return (-1);
+	// ft_printf("piece: %d %d\n", f->p_rows, f->p_cols);// delete me!!
 	i = 0;
 	while (i < f->p_rows)
 	{
@@ -117,14 +122,29 @@ int	handle_piece(t_filler *f, t_heatmap *hm)
 */
 void	get_size(char **ln, int *rows, int *cols)
 {
-	char	*ln_cpy;
+	int		advance;
 
-	ln_cpy = *ln;
-	while (!(ft_isdigit(*ln_cpy)))
-		ln_cpy++;
-	*rows = ft_atoi(ln_cpy);
-	while (!(ft_isdigit(*ln_cpy)))
-		ln_cpy++;
-	*cols = ft_atoi(ln_cpy);
+	advance = parse_digits(*ln, rows);
+	parse_digits(*ln + advance, cols);
 	ft_strdel(ln);
+}
+
+/*
+**	It parses its 'str' argument, searching for digits, which
+**	are stored in an 'int' variable returned at the end.
+*/
+int	parse_digits(char *line, int *n)
+{
+	int	i;
+
+	i = 0;
+	while (!ft_isdigit(line[i]))
+		i++;
+	*n = 0;
+	while (line[i] && ft_isdigit(line[i]))
+	{
+		*n = *n * 10 + (line[i] - '0');
+		i++;
+	}
+	return (i);
 }

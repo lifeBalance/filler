@@ -6,7 +6,7 @@
 /*   By: rodrodri <rodrodri@student.hive.fi >       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/02/03 16:22:48 by rodrodri          #+#    #+#             */
-/*   Updated: 2022/02/13 23:55:18 by rodrodri         ###   ########.fr       */
+/*   Updated: 2022/02/14 01:05:14 by rodrodri         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,29 +21,16 @@ int	main(void)
 	t_filler	f;
 	t_heatmap	hm;
 	int			ret;
-	int			i;
 
-	i = 0;
 	ret = 0;
 	if (init_filler(&f, &hm) < 0)
 		return (-1);
-	if (parse_board(&f) < 0)
-		return (-1);
-	make_filler_heatmap(&f, &hm);
 	while (1)
 	{
-		if (i > 0 && parse_board(&f) < 0)
-		{
-			ret = -1;
+		if (parse_board(&f, &hm) < 0)
 			break ;
-		}
-		make_filler_heatmap(&f, &hm);
-		if (handle_piece(&f, &hm) < 0)
-		{
-			ret = -1;
+		else if (handle_piece(&f, &hm) < 0)
 			break ;
-		}
-		i++;
 	}
 	free_char_2darr(f.board);
 	free_int_2darr(hm.map);
@@ -59,6 +46,7 @@ static int	init_filler(t_filler *f, t_heatmap *hm)
 	if (find_line(&f->line, BOARD_SIZE_LN) < 0)
 		return (-1);
 	get_size(&f->line, &f->b_rows, &f->b_cols);
+	// ft_printf("board: %d %d\n", f->b_rows, f->b_cols);// delete me!!
 	f->board = alloc_char_2darr(f->b_rows, f->b_cols);
 	if (!f->board)
 		return (-1);
