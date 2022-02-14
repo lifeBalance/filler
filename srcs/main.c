@@ -6,7 +6,7 @@
 /*   By: rodrodri <rodrodri@student.hive.fi >       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/02/03 16:22:48 by rodrodri          #+#    #+#             */
-/*   Updated: 2022/02/14 01:05:14 by rodrodri         ###   ########.fr       */
+/*   Updated: 2022/02/14 11:44:11 by rodrodri         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,7 +29,7 @@ int	main(void)
 	{
 		if (parse_board(&f, &hm) < 0)
 			break ;
-		else if (handle_piece(&f, &hm) < 0)
+		if (handle_piece(&f, &hm) < 0)
 			break ;
 	}
 	free_char_2darr(f.board);

@@ -6,7 +6,7 @@
 /*   By: rodrodri <rodrodri@student.hive.fi >       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/02/06 12:03:50 by rodrodri          #+#    #+#             */
-/*   Updated: 2022/02/14 02:14:35 by rodrodri         ###   ########.fr       */
+/*   Updated: 2022/02/14 13:02:47 by rodrodri         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,8 +15,8 @@
 #include "heatmap.h"
 
 static void init_zero(int *arr, int size);
-static void	init_pos(int min[4]);
-static int	find_position(t_filler *f, t_heatmap *hm, int min[4]);
+static void	init_pos(int min[3]);
+static int	find_position(t_filler *f, t_heatmap *hm, int min[3]);
 static int	check_collisions(t_filler *f, int row, int col);
 
 int	make_filler_heatmap(t_filler *f, t_heatmap *hm)
@@ -87,7 +87,7 @@ int	place_piece(t_filler *f, t_heatmap *hm)
 **	that we'll keep in 'pos[0]'(for now).
 **	Returns 1 if the position was found, -1 if it didn't.
 */
-static int	find_position(t_filler *f, t_heatmap *hm, int pos[4])
+static int	find_position(t_filler *f, t_heatmap *hm, int pos[3])
 {
 	int	i;
 	int	j;
