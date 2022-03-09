@@ -6,54 +6,51 @@
 /*   By: rodrodri <rodrodri@student.hive.fi >       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/02/03 16:22:48 by rodrodri          #+#    #+#             */
-/*   Updated: 2022/03/09 10:10:13 by rodrodri         ###   ########.fr       */
+/*   Updated: 2022/02/14 11:44:11 by rodrodri         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "libft.h"
 #include "filler.h"
-#include "logging.h"
+#include "heatmap.h"
 
-static int	init_filler(t_filler *f);
+static int	init_filler(t_filler *f, t_heatmap *hm);
 
 int	main(void)
 {
-	t_filler	f;// try to allocate it in the heap??
+	t_filler	f;
+	t_heatmap	hm;
 	int			ret;
 
-	ret = 1;
-	if (init_filler(&f) < 0)// find player and set all fields in 'f' to ZERO
+	ret = 0;
+	if (init_filler(&f, &hm) < 0)
 		return (-1);
-	while (ret > 0)
+	while (1)
 	{
-		write(f.file, "---board---\n", ft_strlen("---board---\n"));// <=======Don't forget to delete me!!!
-		if (parse_board(&f) < 0 || parse_piece(&f) < 0)
+		if (parse_board(&f, &hm) < 0)
 			break ;
-		if (place_piece(&f) == 0)
-			ft_printf("%d, %d\n", f.y, f.x);
-		else
-		{
-			ft_putstr("0 0\n");
-			ret = -1;
-		}
-		free_char_2darr(f.piece);
-		free(f.piece);
+		if (handle_piece(&f, &hm) < 0)
+			break ;
 	}
-	close(f.file);
+	free_char_2darr(f.board);
+	free_int_2darr(hm.map);
+	system("leaks rodrodri.filler");
 	return (ret);
 }
 
-static int	init_filler(t_filler *f)
+static int	init_filler(t_filler *f, t_heatmap *hm)
 {
-	ft_bzero(f, sizeof(*f));
-	f->file = open ("file.txt", O_TRUNC | O_WRONLY);
+	ft_memset(f, 0, sizeof(*f));
 	if (parse_playas(f) < 0)
 		return (-1);
-	fprint_playa(f);// <=======Don't forget to delete this!!!
-	parse_size(f->fd, &f->b_rows, &f->b_cols);
-	fprint_size(f, "Board size: ", f->b_rows, f->b_cols);// <=======Don't forget to delete this!!!
+	if (find_line(&f->line, BOARD_SIZE_LN) < 0)
+		return (-1);
+	get_size(&f->line, &f->b_rows, &f->b_cols);
+	// ft_printf("board: %d %d\n", f->b_rows, f->b_cols);// delete me!!
 	f->board = alloc_char_2darr(f->b_rows, f->b_cols);
 	if (!f->board)
+		return (-1);
+	if (hm_init(hm, f->b_rows, f->b_cols, 0) < 0)
 		return (-1);
 	return (0);
 }

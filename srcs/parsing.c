@@ -6,145 +6,128 @@
 /*   By: rodrodri <rodrodri@student.hive.fi >       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/02/06 12:03:50 by rodrodri          #+#    #+#             */
-/*   Updated: 2022/02/14 02:47:09 by rodrodri         ###   ########.fr       */
+/*   Updated: 2022/03/09 10:10:41 by rodrodri         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "libft.h"
 #include "filler.h"
+#include "logging.h"
 
-static int	parse_digits(char *line, int *n);
+static int	parse_num(int fd, char n);
 
-/*
-**	It finds the line starting with '$$$ exec p', and checks if it
-**	contains the number 1. If so, we're player 1, otherwise we're player 2.
-**	(It could be refactored to also extract both player names and store them
-**	in dedicated fields of the t_filler structure; can be used for visualize).
-*/
+int	parse_board(t_filler *f)
+{
+	int		i;
+	int		j;
+	char	ch[1];
+
+	read(f->fd, ch, 1); // to get the party started!
+	while (!ft_strchr("XxOo.", ch[0]))
+		read(f->fd, ch, 1);
+	i = 0;
+	while (i < f->b_rows)
+	{
+		j = 0;
+		while (j < f->b_cols)
+		{
+			if (ft_strchr("XxOo.", ch[0]))
+			{
+				f->board[i][j] = ch[0];
+				j++;
+			}
+			read(f->fd, ch, 1);
+		}
+		i++;
+	}
+	fprint_char2darr(f, f->board, f->b_rows, f->b_cols);// <========== delete me!!!!
+	return (0);
+}
+
+int	parse_piece(t_filler *f)
+{
+	int		i;
+	int		j;
+	char	ch;
+
+	write(f->file, "---piece---\n", ft_strlen("---piece---\n"));// <=======Don't forget to delete this!!!
+	if (parse_size(f->fd, &f->p_rows, &f->p_cols) < 0)
+		return (-1);
+	fprint_size(f, "Piece size: ", f->p_rows, f->p_cols);// <=======Don't forget to delete this!!!
+	f->piece = alloc_char_2darr(f->p_rows, f->p_cols);
+	if (!f->piece)
+		return (-1);
+	write(f->file, "---parsing---\n", ft_strlen("---parsing---\n"));// <=======Don't forget to delete this!!!
+	i = 0;
+	while (i < f->p_rows)
+	{
+		j = 0;
+		while (j < f->p_cols)
+		{
+			read(f->fd, &ch, 1);
+			if (ft_strchr("*.", ch))
+			{
+				f->piece[i][j] = ch;
+				j++;
+			}
+		}
+		i++;
+	}
+	fprint_char2darr(f, f->piece, f->p_rows, f->p_cols);// <========== delete me!!!!
+	write(f->file, "---parsed---\n", ft_strlen("---parsed---\n"));// <=======Don't forget to delete this!!!
+	return (0);
+}
+
 int	parse_playas(t_filler *f)
 {
-	char	*playa_num;
+	char	ch;
 
-	if (find_line(&f->line, PLAYA_NUM_LN) < 0)
-		return (-1);
-	playa_num = ft_strchr(f->line, 'p') + 1;
-	if (ft_strncmp(playa_num, "1", 1) == 0)
+	ch = '*';
+	while (!ft_isdigit(ch))
+		read(f->fd, &ch, 1);
+	if (ch == '1')
 	{
 		f->our_playa = PLAYA1;
 		f->other_playa = PLAYA2;
 	}
-	else
+	else if (ch == '2')
 	{
 		f->our_playa = PLAYA2;
 		f->other_playa = PLAYA1;
 	}
-	ft_strdel(&f->line);
-	// ft_printf("our playa: %c other playa: %c\n", f->our_playa, f->other_playa);
-	return (0);
-}
-
-/*
-**	It fast-forwards to the first line of the board (jumping over the line that
-**	serves as header for the columns), and start parsing the cells.
-**	At each line, it jumps over the column at the very beginning, which
-**	contains the number of the row.
-**	It stops reading lines at the very last line of the board.
-*/
-int	parse_board(t_filler *f, t_heatmap *hm)
-{
-	int	i;
-	int	offset;
-
-	if (find_line(&f->line, FIRST_BOARD_LN) < 0)
-		return (-1);
-	i = 0;
-	while (i < f->b_rows)
-	{
-		// ft_strclr(f->board[i]);
-		if (i > 0)
-			get_next_line(STDIN_FILENO, &f->line);
-		offset = (ft_strchr(f->line, ' ') + 1) - f->line;
-		ft_strncpy(f->board[i], f->line + offset, f->b_cols);
-		ft_strdel(&f->line);
-		i++;
-	}
-	// print_char2darr(f->board);
-	make_filler_heatmap(f, hm);
-	// print_filler_heatmap(hm);
-	return (0);
-}
-
-/*
-**	It starts by getting the size of the piece from the line that has already
-**	been stored in f->line. Once the size it sets:
-**	1. If it's NOT OUR TURN, it skips the piece lines. Then it parses the
-**	 'got>' line. If the move is [0, 0]:
-**		1. If there's no 'Plateu' line below, it means the other playa
-**		lost and bailed (set boolean 'greedy' to 1, ALL next pieces ours!).
-**		We gotta parse/place(print for now) the piece.
-**		2. If there's a 'Plateau', we return!
-**	2. If it's OUR TURN, will parse, place and delete the piece.
-*/
-int	handle_piece(t_filler *f, t_heatmap *hm)
-{
-	int	ret;
-	int	i;
-
-	if (find_line(&f->line, PIECE_SIZE_LN) < 0)
-		return (-1);
-	get_size(&f->line, &f->p_rows, &f->p_cols);
-	f->piece = alloc_char_2darr(f->p_rows, f->p_cols);
-	if (!f->piece)
-		return (-1);
-	// ft_printf("piece: %d %d\n", f->p_rows, f->p_cols);// delete me!!
-	i = 0;
-	while (i < f->p_rows)
-	{
-		get_next_line(STDIN_FILENO, &f->line);
-		ft_strncpy(f->piece[i], f->line, f->p_cols);
-		ft_strdel(&f->line);
-		i++;
-	}
-	if (place_piece(f, hm) < 0)
-		ret = -1;
 	else
-		ret = 0;
-	free_char_2darr(f->piece);
-	free(f->piece);
-	return (ret);
+		return (-1);
+	return (0);
 }
 
-/*
-**	It passes its 'str' argument (the address of a string), to the 
-**	'parse_digits' function, which returns an 'int' value that will
-**	be assigned to the 'rows' and 'cols' parameters.
-**	It DELETES the string at the end, and returns '1'.
-*/
-void	get_size(char **ln, int *rows, int *cols)
+int	parse_size(int fd, int *rows, int *cols)
 {
-	int		advance;
+	char	ch;
 
-	advance = parse_digits(*ln, rows);
-	parse_digits(*ln + advance, cols);
-	ft_strdel(ln);
+	read(fd, &ch, 1);
+	while (!ft_isdigit(ch))
+		read(fd, &ch, 1);
+	*rows = parse_num(fd, ch);
+	read(fd, &ch, 1);
+	while (!ft_isdigit(ch))
+		read(fd, &ch, 1);
+	*cols = parse_num(fd, ch);
+	if (*rows <= 0 || *cols <= 0)
+		return (-1);
+	return (0);
 }
 
-/*
-**	It parses its 'str' argument, searching for digits, which
-**	are stored in an 'int' variable returned at the end.
-*/
-int	parse_digits(char *line, int *n)
+static int	parse_num(int fd, char digit)
 {
-	int	i;
+	char	ch;
+	int		n;
 
-	i = 0;
-	while (!ft_isdigit(line[i]))
-		i++;
-	*n = 0;
-	while (line[i] && ft_isdigit(line[i]))
+	ch = digit;
+	n = 0;
+	while (ft_isdigit(ch))
 	{
-		*n = *n * 10 + (line[i] - '0');
-		i++;
+		n = n * 10 + (ch - '0');
+		read(fd, &ch, 1);
 	}
-	return (i);
+	return (n);
 }
