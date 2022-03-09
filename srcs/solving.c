@@ -6,7 +6,7 @@
 /*   By: rodrodri <rodrodri@student.hive.fi >       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/02/06 12:03:50 by rodrodri          #+#    #+#             */
-/*   Updated: 2022/03/09 16:46:13 by rodrodri         ###   ########.fr       */
+/*   Updated: 2022/03/09 20:28:07 by rodrodri         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,15 +15,11 @@
 #include "logging.h"
 
 static int	check_collisions(t_filler *f);
+static void	smarty_pants(t_filler *f);
 
 int	place_piece(t_filler *f)
 {
-	int	i;
-	int	j;
-
-	flog(f->file, "--- solving ---\n");// <=======Don't forget to delete this!!!
 	make_heatmap(f);
-	flog(f->file, "--- heatmap ---\n");// <=======Don't forget to delete this!!!
 	flog_heatmap(f->file, f->heatmap, f->b_rows, f->b_cols);// <=======Don't forget to delete this!!!
 	f->min = 0;
 	f->y = 0;
@@ -32,22 +28,14 @@ int	place_piece(t_filler *f)
 		f->x = 0;
 		while (f->x + f->p_cols <= f->b_cols)
 		{
-			if (check_collisions(f) == 0 && (f->heatmap[i][j] <= f->min || f->min == 0))
-			{
-				f->min = f->heatmap[f->y][f->x];
-				i = f->y;
-				j = f->x;
-			}
+			if (check_collisions(f) == 0)
+				smarty_pants(f);
 			f->x++;
 		}
 		f->y++;
 	}
 	if (f->min)
-	{
-		f->y = i;
-		f->x = j;
 		return (0);
-	}
 	return (-1);
 }
 
@@ -77,4 +65,26 @@ static int	check_collisions(t_filler *f)
 	if (single_collision == 1)
 		return (0);
 	return (-1);
+}
+
+static void	smarty_pants(t_filler *f)
+{
+	if (f->our_playa == PLAYA1)
+	{
+		if (f->heatmap[f->y][f->x] <= f->min || f->min == 0)
+		{
+			f->min = f->heatmap[f->y][f->x];
+			f->min_y = f->y;
+			f->min_x = f->x;
+		}
+	}
+	else
+	{
+		if (f->heatmap[f->y][f->x] < f->min || f->min == 0)
+		{
+			f->min = f->heatmap[f->y][f->x];
+			f->min_y = f->y;
+			f->min_x = f->x;
+		}
+	}
 }

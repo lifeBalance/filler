@@ -6,7 +6,7 @@
 /*   By: rodrodri <rodrodri@student.hive.fi >       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/02/03 16:24:50 by rodrodri          #+#    #+#             */
-/*   Updated: 2022/03/09 15:56:49 by rodrodri         ###   ########.fr       */
+/*   Updated: 2022/03/09 20:22:03 by rodrodri         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,6 +16,7 @@
 # define PLAYA1			'O'
 # define PLAYA2			'X'
 
+# include <stdio.h> // <======= Delete me!!!
 /*
 **	Type definitions
 */
@@ -34,8 +35,10 @@ typedef struct s_filler
 	int		y;
 	int		x;
 	int		min;
-	int		file;
+	int		min_x;
+	int		min_y;
 	int		fd;
+	FILE	*file; /* Testing purposes */
 }	t_filler;
 
 /*
@@ -47,21 +50,12 @@ int		parse_board(t_filler *f);
 int		parse_piece(t_filler *f);
 
 int		place_piece(t_filler *f);
-// int		parse_board(t_filler *f, t_heatmap *hm);
-// int		place_piece(t_filler *f, t_heatmap *hm);
-// int		handle_piece(t_filler *f, t_heatmap *hm);
-
-char	**alloc_char_2darr(int rows, int cols);
-void	free_char_2darr(char **arr);
-// int		find_line(char **ln, const char *str);
-// int		skip_lines(char **str, int n);
-// void	print_char2darr(char **str);
-
-// int		make_filler_heatmap(t_filler *f, t_heatmap *hm);
-// void	print_filler_heatmap(t_heatmap *hm);
 int		make_heatmap(t_filler *f);
 int		max_int(int a, int b);
+
+char	**alloc_char_2darr(int rows, int cols);
 int 	**alloc_int_2darr(int rows, int cols);
+void	free_char_2darr(char **arr);
 void	free_int_2darr(int **arr);
 
 #endif

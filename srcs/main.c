@@ -6,7 +6,7 @@
 /*   By: rodrodri <rodrodri@student.hive.fi >       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/02/03 16:22:48 by rodrodri          #+#    #+#             */
-/*   Updated: 2022/03/09 16:16:13 by rodrodri         ###   ########.fr       */
+/*   Updated: 2022/03/09 20:22:16 by rodrodri         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,19 +18,22 @@ static int	init_filler(t_filler *f);
 
 int	main(void)
 {
-	t_filler	f;// try to allocate it in the heap??
+	t_filler	f;
 	int			ret;
 
 	ret = 1;
-	if (init_filler(&f) < 0)// find player and set all fields in 'f' to ZERO
+	if (init_filler(&f) < 0)
 		return (-1);
+	f.file = fopen("file.txt", "w+");// <=======Don't forget to delete this!!!
+	fprintf(f.file, "Our playa: %c, other playa: %c\n", f.our_playa, f.other_playa);// <===Delete this!!!
 	while (ret > 0)
 	{
-		flog(f.file, "---board---\n");// <======= Don't forget to delete me!!!
 		if (parse_board(&f) < 0 || parse_piece(&f) < 0)
 			break ;
+		flog_char_matrix(f.file, f.board, f.b_rows, f.b_cols, "Board");// <========== delete me!!!!
+		flog_char_matrix(f.file, f.piece, f.p_rows, f.p_cols, "Piece");// <========== delete me!!!!
 		if (place_piece(&f) == 0)
-			ft_printf("%d, %d\n", f.y, f.x);
+			ft_printf("%d %d\n", f.min_y, f.min_x);
 		else
 		{
 			ft_putstr("0 0\n");
@@ -39,7 +42,9 @@ int	main(void)
 		free_char_2darr(f.piece);
 		free(f.piece);
 	}
-	close(f.file);
+	free_int_2darr(f.heatmap);
+	free(f.heatmap);
+	fclose(f.file);
 	system("leaks rodrodri.filler"); // export MallocStackLogging=1
 	return (ret);
 }
@@ -47,12 +52,9 @@ int	main(void)
 static int	init_filler(t_filler *f)
 {
 	ft_bzero(f, sizeof(*f));
-	f->file = open ("file.txt", O_CREAT | O_TRUNC | O_WRONLY);// <=======Don't forget to delete this!!!
 	if (parse_playas(f) < 0)
 		return (-1);
-	flog_playa(f->file, f->our_playa);// <=======Don't forget to delete this!!!
 	parse_size(f->fd, &f->b_rows, &f->b_cols);
-	flog_size(f->file, "Board size: ", f->b_rows, f->b_cols);// <=======Don't forget to delete this!!!
 	f->board = alloc_char_2darr(f->b_rows, f->b_cols);
 	if (!f->board)
 		return (-1);

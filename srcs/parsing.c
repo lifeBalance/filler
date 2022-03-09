@@ -6,7 +6,7 @@
 /*   By: rodrodri <rodrodri@student.hive.fi >       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/02/06 12:03:50 by rodrodri          #+#    #+#             */
-/*   Updated: 2022/03/09 13:27:53 by rodrodri         ###   ########.fr       */
+/*   Updated: 2022/03/09 20:02:07 by rodrodri         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -40,7 +40,6 @@ int	parse_board(t_filler *f)
 		}
 		i++;
 	}
-	flog_char_matrix(f->file, f->board, f->b_rows, f->b_cols);// <========== delete me!!!!
 	return (0);
 }
 
@@ -50,14 +49,11 @@ int	parse_piece(t_filler *f)
 	int		j;
 	char	ch;
 
-	flog(f->file, "---piece---\n");// <======= Don't forget to delete me!!!
 	if (parse_size(f->fd, &f->p_rows, &f->p_cols) < 0)
 		return (-1);
-	flog_size(f->file, "Piece size: ", f->p_rows, f->p_cols);// <=======Don't forget to delete this!!!
 	f->piece = alloc_char_2darr(f->p_rows, f->p_cols);
 	if (!f->piece)
 		return (-1);
-	flog(f->file, "---parsing---\n");// <======= Don't forget to delete me!!!
 	i = 0;
 	while (i < f->p_rows)
 	{
@@ -73,8 +69,6 @@ int	parse_piece(t_filler *f)
 		}
 		i++;
 	}
-	flog_char_matrix(f->file, f->piece, f->p_rows, f->p_cols);// <========== delete me!!!!
-	flog(f->file, "---piece parsed---\n");// <======= Don't forget to delete me!!!
 	return (0);
 }
 
