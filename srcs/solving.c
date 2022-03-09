@@ -6,21 +6,21 @@
 /*   By: rodrodri <rodrodri@student.hive.fi >       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/02/06 12:03:50 by rodrodri          #+#    #+#             */
-/*   Updated: 2022/03/09 20:28:07 by rodrodri         ###   ########.fr       */
+/*   Updated: 2022/03/09 20:54:23 by rodrodri         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "libft.h"
 #include "filler.h"
-#include "logging.h"
-
+/*
+** #include "logging.h"
+*/
 static int	check_collisions(t_filler *f);
 static void	smarty_pants(t_filler *f);
 
 int	place_piece(t_filler *f)
 {
 	make_heatmap(f);
-	flog_heatmap(f->file, f->heatmap, f->b_rows, f->b_cols);// <=======Don't forget to delete this!!!
 	f->min = 0;
 	f->y = 0;
 	while (f->y + f->p_rows <= f->b_rows)
@@ -45,7 +45,7 @@ static int	check_collisions(t_filler *f)
 	int		j;
 	int		single_collision;
 	char	cell;
-	
+
 	single_collision = 0;
 	i = 0;
 	while (i < f->p_rows)

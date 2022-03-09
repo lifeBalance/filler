@@ -6,25 +6,31 @@
 /*   By: rodrodri <rodrodri@student.hive.fi >       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/02/06 12:03:50 by rodrodri          #+#    #+#             */
-/*   Updated: 2022/03/09 20:02:07 by rodrodri         ###   ########.fr       */
+/*   Updated: 2022/03/09 21:00:05 by rodrodri         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "libft.h"
 #include "filler.h"
-#include "logging.h"
-
+/*
+** #include "logging.h"
+*/
 static int	parse_num(int fd, char n);
 
+/*
+**	It parses the board, a 2d array of characters, nothing special.
+**	The only thing to mention is the first line after the declarations:
+**	Its purpose is to move the file cursor passed the last position.
+*/
 int	parse_board(t_filler *f)
 {
 	int		i;
 	int		j;
 	char	ch[1];
 
-	read(f->fd, ch, 1); // to get the party started!
+	read(STDIN_FILENO, ch, 1);
 	while (!ft_strchr("XxOo.", ch[0]))
-		read(f->fd, ch, 1);
+		read(STDIN_FILENO, ch, 1);
 	i = 0;
 	while (i < f->b_rows)
 	{
@@ -36,7 +42,7 @@ int	parse_board(t_filler *f)
 				f->board[i][j] = ch[0];
 				j++;
 			}
-			read(f->fd, ch, 1);
+			read(STDIN_FILENO, ch, 1);
 		}
 		i++;
 	}
@@ -49,7 +55,7 @@ int	parse_piece(t_filler *f)
 	int		j;
 	char	ch;
 
-	if (parse_size(f->fd, &f->p_rows, &f->p_cols) < 0)
+	if (parse_size(STDIN_FILENO, &f->p_rows, &f->p_cols) < 0)
 		return (-1);
 	f->piece = alloc_char_2darr(f->p_rows, f->p_cols);
 	if (!f->piece)
@@ -60,7 +66,7 @@ int	parse_piece(t_filler *f)
 		j = 0;
 		while (j < f->p_cols)
 		{
-			read(f->fd, &ch, 1);
+			read(STDIN_FILENO, &ch, 1);
 			if (ft_strchr("*.", ch))
 			{
 				f->piece[i][j] = ch;
@@ -78,7 +84,7 @@ int	parse_playas(t_filler *f)
 
 	ch = '*';
 	while (!ft_isdigit(ch))
-		read(f->fd, &ch, 1);
+		read(STDIN_FILENO, &ch, 1);
 	if (ch == '1')
 	{
 		f->our_playa = PLAYA1;
