@@ -6,7 +6,7 @@
 #    By: rodrodri <rodrodri@student.hive.fi >       +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2022/02/03 16:19:55 by rodrodri          #+#    #+#              #
-#    Updated: 2022/03/09 10:03:00 by rodrodri         ###   ########.fr        #
+#    Updated: 2022/03/09 15:27:37 by rodrodri         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -23,7 +23,7 @@ SRCS_DIR	:= srcs
 vpath		%.h includes
 vpath		%.c srcs
 
-HDRS	=	filler.h heatmap.h
+HDRS	=	filler.h logging.h visual.h
 SRCS	=	main.c parsing.c utils.c
 SRCS	+=	solving.c heatmap.c heatmap_utils.c logging.c
 OBJS	=	$(patsubst %,$(OBJS_DIR)/%,$(SRCS:.c=.o))

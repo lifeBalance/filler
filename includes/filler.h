@@ -6,7 +6,7 @@
 /*   By: rodrodri <rodrodri@student.hive.fi >       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/02/03 16:24:50 by rodrodri          #+#    #+#             */
-/*   Updated: 2022/03/09 10:26:43 by rodrodri         ###   ########.fr       */
+/*   Updated: 2022/03/09 15:56:49 by rodrodri         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,8 +16,6 @@
 # define PLAYA1			'O'
 # define PLAYA2			'X'
 
-#include "heatmap.h"
-
 /*
 **	Type definitions
 */
@@ -26,7 +24,7 @@ typedef struct s_filler
 	char	**board;
 	char	**piece;
 	char	*line;
-	int		**heat_map;
+	int		**heatmap;
 	char	our_playa;
 	char	other_playa;
 	int		b_rows;
@@ -35,6 +33,7 @@ typedef struct s_filler
 	int		p_cols;
 	int		y;
 	int		x;
+	int		min;
 	int		file;
 	int		fd;
 }	t_filler;
@@ -60,5 +59,9 @@ void	free_char_2darr(char **arr);
 
 // int		make_filler_heatmap(t_filler *f, t_heatmap *hm);
 // void	print_filler_heatmap(t_heatmap *hm);
+int		make_heatmap(t_filler *f);
+int		max_int(int a, int b);
+int 	**alloc_int_2darr(int rows, int cols);
+void	free_int_2darr(int **arr);
 
 #endif

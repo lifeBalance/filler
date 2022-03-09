@@ -6,14 +6,19 @@
 /*   By: rodrodri <rodrodri@student.hive.fi >       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/02/06 12:03:50 by rodrodri          #+#    #+#             */
-/*   Updated: 2022/03/09 10:08:01 by rodrodri         ###   ########.fr       */
+/*   Updated: 2022/03/09 13:49:05 by rodrodri         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "libft.h"
 #include "logging.h"
 
-void	fprint_char2darr(t_filler *f, char **str, int rows, int cols)
+void	flog(int fd, const char *s)
+{
+	write(fd, s, ft_strlen(s));
+}
+
+void	flog_char_matrix(int fd, char **str, int rows, int cols)
 {
 	int		i;
 	int		j;
@@ -24,31 +29,55 @@ void	fprint_char2darr(t_filler *f, char **str, int rows, int cols)
 		j = 0;
 		while (j < cols)
 		{
-			write(f->file, str[i] + j, 1);
+			write(fd, str[i] + j, 1);
 			j++;
 		}
-		write(f->file, "\n", 1);
+		write(fd, "\n", 1);
 		i++;
 	}
 }
 
-void	fprint_playa(t_filler *f)
+void	flog_heatmap(int fd, int **arr, int rows, int cols)
 {
-	write(f->file, "Our playa: ", ft_strlen("Our playa: "));
-	write(f->file, &(f->our_playa), 1);
-	write(f->file, "\n", 1);
+	int		i;
+	int		j;
+	char	ch;
+
+	i = 0;
+	while (i < rows)
+	{
+		j = 0;
+		while (j < cols)
+		{
+			if (arr[i][j] < 0)
+				ch = '0';
+			else
+				ch = arr[i][j] + '0';
+			write(fd, &ch, 1);
+			j++;
+		}
+		write(fd, "\n", 1);
+		i++;
+	}
 }
 
-void	fprint_size(t_filler *f, const char *str, int rows, int cols)
+void	flog_playa(int fd, char playa)
+{
+	write(fd, "Our playa: ", ft_strlen("Our playa: "));
+	write(fd, &playa, 1);
+	write(fd, "\n", 1);
+}
+
+void	flog_size(int fd, const char *str, int rows, int cols)
 {
 	char	*n;
-	write(f->file, str, ft_strlen(str));
+	write(fd, str, ft_strlen(str));
 	n = ft_itoa(rows);
-	write(f->file, n, ft_strlen(n));
+	write(fd, n, ft_strlen(n));
 	ft_strdel(&n);
-	write(f->file, " ", 1);
+	write(fd, " ", 1);
 	n = ft_itoa(cols);
-	write(f->file, n, ft_strlen(n));
+	write(fd, n, ft_strlen(n));
 	ft_strdel(&n);
-	write(f->file, "\n", 1);
+	write(fd, "\n", 1);
 }

@@ -6,7 +6,7 @@
 /*   By: rodrodri <rodrodri@student.hive.fi >       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/02/06 12:03:50 by rodrodri          #+#    #+#             */
-/*   Updated: 2022/03/09 10:10:41 by rodrodri         ###   ########.fr       */
+/*   Updated: 2022/03/09 13:27:53 by rodrodri         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -40,7 +40,7 @@ int	parse_board(t_filler *f)
 		}
 		i++;
 	}
-	fprint_char2darr(f, f->board, f->b_rows, f->b_cols);// <========== delete me!!!!
+	flog_char_matrix(f->file, f->board, f->b_rows, f->b_cols);// <========== delete me!!!!
 	return (0);
 }
 
@@ -50,14 +50,14 @@ int	parse_piece(t_filler *f)
 	int		j;
 	char	ch;
 
-	write(f->file, "---piece---\n", ft_strlen("---piece---\n"));// <=======Don't forget to delete this!!!
+	flog(f->file, "---piece---\n");// <======= Don't forget to delete me!!!
 	if (parse_size(f->fd, &f->p_rows, &f->p_cols) < 0)
 		return (-1);
-	fprint_size(f, "Piece size: ", f->p_rows, f->p_cols);// <=======Don't forget to delete this!!!
+	flog_size(f->file, "Piece size: ", f->p_rows, f->p_cols);// <=======Don't forget to delete this!!!
 	f->piece = alloc_char_2darr(f->p_rows, f->p_cols);
 	if (!f->piece)
 		return (-1);
-	write(f->file, "---parsing---\n", ft_strlen("---parsing---\n"));// <=======Don't forget to delete this!!!
+	flog(f->file, "---parsing---\n");// <======= Don't forget to delete me!!!
 	i = 0;
 	while (i < f->p_rows)
 	{
@@ -73,8 +73,8 @@ int	parse_piece(t_filler *f)
 		}
 		i++;
 	}
-	fprint_char2darr(f, f->piece, f->p_rows, f->p_cols);// <========== delete me!!!!
-	write(f->file, "---parsed---\n", ft_strlen("---parsed---\n"));// <=======Don't forget to delete this!!!
+	flog_char_matrix(f->file, f->piece, f->p_rows, f->p_cols);// <========== delete me!!!!
+	flog(f->file, "---piece parsed---\n");// <======= Don't forget to delete me!!!
 	return (0);
 }
 

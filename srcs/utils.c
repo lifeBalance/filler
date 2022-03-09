@@ -6,7 +6,7 @@
 /*   By: rodrodri <rodrodri@student.hive.fi >       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/02/06 12:07:35 by rodrodri          #+#    #+#             */
-/*   Updated: 2022/02/13 23:34:36 by rodrodri         ###   ########.fr       */
+/*   Updated: 2022/03/09 12:50:50 by rodrodri         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -72,7 +72,6 @@ void	free_char_2darr(char **arr)
 		i++;
 	}
 }
-
 
 /*
 **	It skips a given number of lines, freeing allocated lines along the way.

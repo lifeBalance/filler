@@ -6,12 +6,12 @@
 /*   By: rodrodri <rodrodri@student.hive.fi >       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/02/10 22:46:08 by rodrodri          #+#    #+#             */
-/*   Updated: 2022/02/11 16:02:16 by rodrodri         ###   ########.fr       */
+/*   Updated: 2022/03/09 16:05:38 by rodrodri         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "libft.h"
-#include "heatmap.h"
+#include "filler.h"
 
 int	max_int(int a, int b)
 {
