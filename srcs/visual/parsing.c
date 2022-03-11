@@ -6,7 +6,7 @@
 /*   By: rodrodri <rodrodri@student.hive.fi >       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/03/11 13:08:45 by rodrodri          #+#    #+#             */
-/*   Updated: 2022/03/11 15:08:37 by rodrodri         ###   ########.fr       */
+/*   Updated: 2022/03/11 18:07:21 by rodrodri         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,10 +16,16 @@
 static int	parse_digits(char *line, int *n);
 static void	parse_size(char **ln, int *rows, int *cols);
 
+void	parse_piece_size(t_visualizer *v)
+{
+	parse_size(&v->line, &v->p_rows, &v->p_cols);
+}
+
 void	parse_board_size(t_visualizer *v)
 {
 	parse_size(&v->line, &v->b_rows, &v->b_cols);
 }
+
 /*
 **	It passes its 'str' argument (the address of a string), to the 
 **	'parse_digits' function, which returns an 'int' value that will
@@ -65,22 +71,4 @@ void	parse_score(t_visualizer *v)
 	if (find_line(v->fd, &v->line, END_GAME_LN) == 0)
 		parse_digits(v->line, &v->score2);
 	ft_strdel(&v->line);
-}
-
-int	find_line(int fd, char **ln, const char *str)
-{
-	int		ret;
-
-	ret = get_next_line(fd, ln);
-	while (ret > 0)
-	{
-		if (ft_strstr(*ln, str))
-			return (0);
-		else
-		{
-			ft_strdel(ln);
-			ret = get_next_line(fd, ln);
-		}
-	}
-	return (-1);
 }

@@ -6,7 +6,7 @@
 #    By: rodrodri <rodrodri@student.hive.fi >       +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2022/02/03 16:19:55 by rodrodri          #+#    #+#              #
-#    Updated: 2022/03/11 13:13:42 by rodrodri         ###   ########.fr        #
+#    Updated: 2022/03/11 15:44:32 by rodrodri         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -31,7 +31,7 @@ VIS_ODIR	:= ./objs/visual
 FIL_SRC_LIST	=	main.c parsing.c utils.c solving.c #logging.c
 FIL_SRC_LIST	+=	heatmap.c heatmap_utils.c
 
-VIS_SRC_LIST	=	main.c color.c parsing.c
+VIS_SRC_LIST	=	main.c color.c parsing.c utils.c
 
 FIL_SRCS	=	$(addprefix $(FIL_SDIR)/,$(FIL_SRC_LIST))
 FIL_OBJS	=	$(patsubst  $(FIL_SDIR)/%,$(FIL_ODIR)/%,$(FIL_SRCS:.c=.o))
@@ -52,6 +52,7 @@ $(VISUALIZER):	$(VIS_OBJS)
 	$(CC) $(CFLAGS) $(VIS_OBJS) $(LDFLAGS) $(LDLIBS) -lft -lncurses -o $(VISUALIZER)
 
 $(VIS_OBJS): $(VIS_SRCS)
+	rm -rf $(VIS_ODIR)
 	$(CC) $(CFLAGS) -c $^
 	mkdir -p $(VIS_ODIR) && mv $(notdir $(VIS_OBJS)) $(VIS_ODIR)
 

@@ -6,7 +6,7 @@
 /*   By: rodrodri <rodrodri@student.hive.fi >       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/03/09 10:24:24 by rodrodri          #+#    #+#             */
-/*   Updated: 2022/03/11 14:05:43 by rodrodri         ###   ########.fr       */
+/*   Updated: 2022/03/11 20:15:56 by rodrodri         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -57,15 +57,20 @@ typedef struct s_visualizer
 	int		y;
 	int		x;
 	int		runs;
+	WINDOW	*w_banner;
+	WINDOW	*w_board;
+	WINDOW	*w_score;
 }	t_visualizer;
 
 /*
 **	Prototypes
 */
 void	init_colors();
-void	colorize_line(WINDOW *w, char *line, int win_row);
+void	colorize_b_line(t_visualizer *v, int win_row);
 void	parse_board_size(t_visualizer *v);
+void	parse_piece_size(t_visualizer *v);
 int		find_line(int fd, char **ln, const char *str);
+int		skip_lines(t_visualizer *v, int n);
 void	parse_score(t_visualizer *v);
 
 #endif
