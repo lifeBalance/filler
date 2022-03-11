@@ -6,11 +6,9 @@
 /*   By: rodrodri <rodrodri@student.hive.fi >       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/03/09 22:37:24 by rodrodri          #+#    #+#             */
-/*   Updated: 2022/03/10 22:05:12 by rodrodri         ###   ########.fr       */
+/*   Updated: 2022/03/11 12:26:38 by rodrodri         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
-
-// gcc visual.c -Iincludes -Ilibft/includes -L../libft -lft -lncurses
 
 #include "visual.h"
 #include "libft.h"
@@ -27,7 +25,7 @@ void	init_colors()
 	init_pair(NUM_COLOR, COLOR_BLACK, COLOR_WHITE);
 }
 
-void	colorize_board(WINDOW *w, char *line, int win_row)
+void	colorize_line(WINDOW *w, char *line, int win_row)
 {
 	int	win_col;
 

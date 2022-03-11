@@ -6,7 +6,7 @@
 /*   By: rodrodri <rodrodri@student.hive.fi >       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/03/09 22:37:24 by rodrodri          #+#    #+#             */
-/*   Updated: 2022/03/10 17:40:15 by rodrodri         ###   ########.fr       */
+/*   Updated: 2022/03/11 15:13:07 by rodrodri         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,39 +18,26 @@
 
 static void	print_banner(WINDOW *w, t_visualizer *v);
 static void	print_board(WINDOW *w, t_visualizer *v);
-static int	find_line(int fd, char **ln, const char *str);
-
-// void	parse_banner(t_visualizer *v);
-// WINDOW	*new_box(int height, int width, int start_y, int start_x);
+static void	print_score(WINDOW *w, t_visualizer *v);
 
 int	main(void)
 {
 	t_visualizer	v;
 	WINDOW			*w_banner;
 	WINDOW			*w_board;
+	WINDOW			*w_score;
 
-	// v.fd = STDIN_FILENO;
-	v.b_rows = 15;
-	v.b_cols = 17;
-
-	// parse_banner(&v);
-	// parse_playas (names and numbers)
-	// parse size of board
-	// parse board
+	w_board = NULL;
+	w_banner = NULL;
+	w_score = NULL;
+	v.runs = 0;
 	initscr();
 	init_colors();
-
-	w_banner = newwin(BANNER_HEIGHT, BANNER_WIDTH, 0, 0);
-	w_board = newwin(v.b_rows + 2, v.b_cols + 4, BANNER_HEIGHT + 1, 0);
 	print_banner(w_banner, &v);
 	print_board(w_board, &v);
-	// addstr("Hello world\n");
-	// print the banner in ncurses
-	// print the playas in ncurses
-	// print the size in ncurses
-	// print the board in ncurses
+	print_score(w_score, &v);
 	refresh();
-	// getch();
+	getch();
 	endwin();
 	return (0);
 }
@@ -59,7 +46,8 @@ void	print_banner(WINDOW *w, t_visualizer *v)
 {
 	int	i;
 
-	v->fd = open("banner.txt", O_RDONLY);
+	w = newwin(BANNER_HEIGHT, BANNER_WIDTH, 0, 0);
+	v->fd = open("./bling/banner.txt", O_RDONLY);
 	i = 0;
 	while (i < BANNER_HEIGHT)
 	{
@@ -69,7 +57,7 @@ void	print_banner(WINDOW *w, t_visualizer *v)
 		i++;
 	}
 	wrefresh(w);
-	// wgetch(w);
+	delwin(w);
 	close(v->fd);
 }
 
@@ -77,64 +65,42 @@ void	print_board(WINDOW *w, t_visualizer *v)
 {
 	int	i;
 
-	v->fd = open("output", O_RDONLY);
-	while (find_line(v->fd, &v->line, BOARD_SIZE_LN) == 0)
+	v->fd = STDIN_FILENO;
+	while(find_line(v->fd, &v->line, BOARD_SIZE_LN) == 0)
 	{
-		i = 0;
-		while (1)
+		if (v->runs == 0)
 		{
-			colorize_board(w, v->line, i);
-			ft_strdel(&v->line);
-			if (i > v->b_rows + 2)
-				break ;
+			parse_board_size(v);
+			w = newwin(v->b_rows + 1, v->b_cols + 4, BANNER_HEIGHT + 1, 0);
+		}
+		ft_strdel(&v->line);
+		i = 0;
+		while (i < v->b_rows + 1)
+		{
 			get_next_line(v->fd, &v->line);
+			colorize_line(w, v->line, i);
+			ft_strdel(&v->line);
 			i++;
 		}
-		usleep(500000);
+		usleep(50000);
 		wrefresh(w);
+		v->runs++;
 	}
-	wgetch(w);
-	close(v->fd);
+	delwin(w);
 }
 
-static int	find_line(int fd, char **ln, const char *str)
+void	print_score(WINDOW *w, t_visualizer *v)
 {
-	int		ret;
-
-	ret = get_next_line(fd, ln);
-	while (ret > 0)
-	{
-		if (ft_strstr(*ln, str))
-			return (0);
-		else
-		{
-			ft_strdel(ln);
-			ret = get_next_line(fd, ln);
-		}
-	}
-	return (-1);
+	v->fd = STDIN_FILENO;
+	parse_score(v);
+	w = newwin(1, 80, v->b_rows + BANNER_HEIGHT + 1, 0);
+	if (v->score1 > v->score2)
+		mvwprintw(w, 0, 0, "Player 1 wins!");
+	else if (v->score1 < v->score2)
+		mvwprintw(w, 0, 0, "Player 2 wins!");
+	else
+		mvwprintw(w, 0, 0, "Draw!");
+	wrefresh(w);
+	delwin(w);
+	sleep(10);
 }
-
-// void	parse_banner(t_visualizer *v)
-// {
-// 	int	i;
-
-// 	v->fd = open("banner.txt", O_RDONLY);
-// 	i = 0;
-// 	while (i < BANNER_HEIGHT)
-// 	{
-// 		ft_strncpy(v->banner[i], v->line, BANNER_WIDTH);
-// 		printf("yo\n");
-// 		i++;
-// 	}
-// }
-
-// WINDOW	*new_box(int height, int width, int start_y, int start_x)
-// {
-// 	WINDOW *local_win;
-
-// 	local_win = newwin(height, width, start_y, start_x);
-// 	box(local_win, 0 , 0);
-// 	wrefresh(local_win);
-// 	return (local_win);
-// }
