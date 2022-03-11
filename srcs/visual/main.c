@@ -6,7 +6,7 @@
 /*   By: rodrodri <rodrodri@student.hive.fi >       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/03/09 22:37:24 by rodrodri          #+#    #+#             */
-/*   Updated: 2022/03/11 21:07:07 by rodrodri         ###   ########.fr       */
+/*   Updated: 2022/03/11 22:43:37 by rodrodri         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,24 +15,29 @@
 #include "visual.h"
 #include "libft.h"
 
-static void	print_banner(t_visualizer *v);
 static void	print_board(t_visualizer *v);
-static void	print_score(t_visualizer *v);
 
 int	main(void)
 {
 	t_visualizer	v;
 
 	v.w_board = NULL;
-	v.w_banner = NULL;
-	v.w_score = NULL;
 	v.runs = 0;
 	initscr();
 	init_colors();
-	print_banner(&v);
-	wrefresh(v.w_banner);
-	print_board(&v);
-	print_score(&v);
+	v.fd = STDIN_FILENO;
+	skip_lines(&v, 9);
+	parse_board_size(&v);
+	while (1)
+	{
+		print_board(&v);
+		wrefresh(v.w_board);
+		usleep(50000);
+		if (find_line(v.fd, &v.line, BOARD_SIZE_LN) < 0)
+			break ;
+		v.runs++;
+	}
+	sleep(5);
 	refresh();
 	getch();
 	delwin(v.w_banner);
@@ -62,27 +67,15 @@ void	print_board(t_visualizer *v)
 {
 	int	i;
 
-	v->fd = STDIN_FILENO;
-	while (find_line(v->fd, &v->line, BOARD_SIZE_LN) == 0)
-	{
-		if (v->runs == 0)
-		{
-			parse_board_size(v);
-			v->w_board = \
-				newwin(v->b_rows + 1, v->b_cols + 4, BANNER_HEIGHT + 1, 0);
-		}
+	if (v->runs > 0)
 		ft_strdel(&v->line);
-		i = 0;
-		while (i < v->b_rows + 1)
-		{
-			get_next_line(v->fd, &v->line);
-			colorize_b_line(v, i);
-			ft_strdel(&v->line);
-			i++;
-		}
-		usleep(50000);
-		wrefresh(v->w_board);
-		v->runs++;
+	i = 0;
+	while (i < v->b_rows + 1)
+	{
+		get_next_line(v->fd, &v->line);
+		colorize_b_line(v, i);
+		ft_strdel(&v->line);
+		i++;
 	}
 }
 

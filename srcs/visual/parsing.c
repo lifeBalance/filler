@@ -6,7 +6,7 @@
 /*   By: rodrodri <rodrodri@student.hive.fi >       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/03/11 13:08:45 by rodrodri          #+#    #+#             */
-/*   Updated: 2022/03/11 18:07:21 by rodrodri         ###   ########.fr       */
+/*   Updated: 2022/03/11 22:41:38 by rodrodri         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,12 +18,17 @@ static void	parse_size(char **ln, int *rows, int *cols);
 
 void	parse_piece_size(t_visualizer *v)
 {
+	get_next_line(v->fd, &v->line);
 	parse_size(&v->line, &v->p_rows, &v->p_cols);
+	ft_strdel(&v->line);
 }
 
 void	parse_board_size(t_visualizer *v)
 {
+	get_next_line(v->fd, &v->line);
 	parse_size(&v->line, &v->b_rows, &v->b_cols);
+	v->w_board = newwin(v->b_rows + 1, v->b_cols + 4, 1, 1);
+	ft_strdel(&v->line);
 }
 
 /*
@@ -38,7 +43,6 @@ void	parse_size(char **ln, int *rows, int *cols)
 
 	advance = parse_digits(*ln, rows);
 	parse_digits(*ln + advance, cols);
-	ft_strdel(ln);
 }
 
 /*
