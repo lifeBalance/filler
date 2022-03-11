@@ -6,6 +6,8 @@
 !/srcs/filler
 !/srcs/visual
 !/includes
+!/bling
+!/bling/*
 !/resources
 !/resources/**/*
 
