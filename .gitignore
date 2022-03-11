@@ -1,9 +1,13 @@
 # Ignore everything (files and folders)
 /**
 
-# Whitelist folders:
+# Whitelist folders and subfolders:
 !/srcs
+!/srcs/filler
+!/srcs/visual
 !/includes
+!/resources
+!/resources/**/*
 
 # Whitelist:
 !.gitignore
