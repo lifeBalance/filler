@@ -6,7 +6,7 @@
 /*   By: rodrodri <rodrodri@student.hive.fi >       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/03/09 22:37:24 by rodrodri          #+#    #+#             */
-/*   Updated: 2022/03/11 22:43:37 by rodrodri         ###   ########.fr       */
+/*   Updated: 2022/03/12 11:59:57 by rodrodri         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -94,3 +94,8 @@ void	print_score(t_visualizer *v)
 	delwin(v->w_score);
 	sleep(10);
 }
+
+/*
+**	ncurses is known for messing up your terminal (even after cleaning up)
+**	You can fix it by typing 'reset', then press 'ctrl + j'
+*/
