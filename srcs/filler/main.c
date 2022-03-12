@@ -6,7 +6,7 @@
 /*   By: rodrodri <rodrodri@student.hive.fi >       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/02/03 16:22:48 by rodrodri          #+#    #+#             */
-/*   Updated: 2022/03/09 20:59:48 by rodrodri         ###   ########.fr       */
+/*   Updated: 2022/03/12 11:50:08 by rodrodri         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,6 +16,7 @@
 ** #include "logging.h"
 */
 static int	init_filler(t_filler *f);
+static void	clean_up(t_filler *f);
 
 int	main(void)
 {
@@ -39,8 +40,7 @@ int	main(void)
 		free_char_2darr(f.piece);
 		free(f.piece);
 	}
-	free_int_2darr(f.heatmap);
-	free(f.heatmap);
+	clean_up(&f);
 	return (ret);
 }
 
@@ -59,6 +59,13 @@ static int	init_filler(t_filler *f)
 	return (0);
 }
 
+static void	clean_up(t_filler *f)
+{
+	free_char_2darr(f->board);
+	free(f->board);
+	free_int_2darr(f->heatmap);
+	free(f->heatmap);
+}
 /*
 ** After the call to 'init_filler':
 **		f.file = fopen("file.txt", "w+");

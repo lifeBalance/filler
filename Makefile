@@ -6,7 +6,7 @@
 #    By: rodrodri <rodrodri@student.hive.fi >       +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2022/02/03 16:19:55 by rodrodri          #+#    #+#              #
-#    Updated: 2022/03/11 15:44:32 by rodrodri         ###   ########.fr        #
+#    Updated: 2022/03/12 11:42:24 by rodrodri         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -45,6 +45,8 @@ $(FILLER):	$(FIL_OBJS)
 	$(CC) $(CFLAGS) $(FIL_OBJS) $(LDFLAGS) $(LDLIBS) -o $(FILLER)
 
 $(FIL_OBJS): $(FIL_SRCS)
+	rm -rf $(FIL_ODIR)
+	make -sC libft
 	$(CC) $(CFLAGS) -c $^
 	mkdir -p $(FIL_ODIR) && mv $(notdir $(FIL_OBJS)) $(FIL_ODIR)
 
@@ -53,15 +55,16 @@ $(VISUALIZER):	$(VIS_OBJS)
 
 $(VIS_OBJS): $(VIS_SRCS)
 	rm -rf $(VIS_ODIR)
+	make -sC libft
 	$(CC) $(CFLAGS) -c $^
 	mkdir -p $(VIS_ODIR) && mv $(notdir $(VIS_OBJS)) $(VIS_ODIR)
 
 clean:
-	/bin/rm -rf $(VIS_ODIR) $(FIL_ODIR)
+	/bin/rm -rf ./objs
 	make -sC libft clean
 
 fclean:	clean
-	/bin/rm -f $(FILLER) $(VISUALIZER)
+	/bin/rm -rf $(VISUALIZER) $(FILLER)
 	make -sC libft fclean
 
 re:	fclean all

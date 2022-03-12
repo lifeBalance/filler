@@ -2,6 +2,12 @@
 /**
 
 # Whitelist folders and subfolders:
+!/libft
+!/libft/includes
+!/libft/includes/*.h
+!/libft/srcs
+!/libft/srcs/*
+!/libft/Makefile
 !/srcs
 !/srcs/filler
 !/srcs/visual
