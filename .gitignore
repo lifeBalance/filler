@@ -16,6 +16,8 @@
 !/bling/*
 !/resources
 !/resources/**/*
+!/README
+!/README/images
 
 # Whitelist:
 !.gitignore
@@ -24,6 +26,8 @@
 !*.c.test
 !*.h
 !*.pdf
+!*.png
+!*.mp4
 !Makefile
 !test
 !resources.zip
