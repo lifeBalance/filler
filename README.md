@@ -14,7 +14,7 @@ And if you want to visualize the game:
 ./resources/filler_vm -f resources/maps/map01 -p2 ./resources/players/carli.filler -p1 ./rodrodri.filler | ./visualizer
 ```
 
-https://github.com/lifeBalance/filler/blob/master/README/images/filler.mp4
+https://raw.githubusercontent.com/lifeBalance/filler/master/README/images/filler.mp4?token=GHSAT0AAAAAABOE6JCM5L7OFUNSUM6PYEPQYRQX5HA
 
 Above is what the `visualizer` looks like. I did it with [ncurses](https://en.wikipedia.org/wiki/Ncurses), but as soon as I get some free time, I'm planning to come back to this project, to implement the visualizer using web technologies.
 
