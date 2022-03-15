@@ -3,9 +3,15 @@ Create your player to fight other students on the famous (or not) Filler board. 
 
 ![graded](./README/images/graded.png)
 
-An example of how to run this program:
+## Compiling and Running
+To compile:
 ```
 make
+```
+That should result in two executables: `rodrodri.filler` and `visualizer`.
+
+You can run this program getting the raw output of the Ruby script in your terminal:
+```
 ./resources/filler_vm -f resources/maps/map01 -p2 ./resources/players/carli.filler -p1 ./rodrodri.filler 
 ```
 
