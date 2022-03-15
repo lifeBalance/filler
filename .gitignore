@@ -21,7 +21,11 @@
 !.gitignore
 !author
 !*.c
+!*.c.test
 !*.h
+!*.pdf
 !Makefile
 !test
 !resources.zip
+!graded.png
+!README.md
